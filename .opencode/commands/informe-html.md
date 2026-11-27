@@ -48,7 +48,7 @@ HTML5 autocontenido, mismo estilo y `<nav>` con anclas. Secciones:
 # Reglas
 1. No inventes cifras → `NO EJECUTADO` + causa en "Limitaciones".
 2. Escapa todo texto dinámico (`escapeHtml`).
-3. Enlaces relativos desde la raíz del repo.
+3. Enlaces absolutos a `https://github.com/Gbrito1985Odoo/qa-automation-test/blob/main/...` para archivos versionados; artefactos no versionados enlazar a `actions/workflows/...` o dejarlos como código, nunca como `file:///` ni rutas relativas que se rompan al abrir el HTML.
 4. Accesibilidad: `lang="es"`, contraste AA, `<caption>`, `aria-label` en nav.
 5. Responsive, dark mode automático.
 6. Sin dependencias externas: CSS/JS inline.

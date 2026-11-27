@@ -8,6 +8,7 @@ reports/history/
 reports/*.json
 reports/security/*.html
 reports/security/*.json
+reports/*.zip
 docs/manual/evidencias/*.png
 *.log
 .DS_Store

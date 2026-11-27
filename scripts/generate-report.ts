@@ -1,5 +1,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
+const repoUrl = 'https://github.com/Gbrito1985Odoo/qa-automation-test';
+const blob = (file: string): string => `${repoUrl}/blob/main/${file}`;
+const workflow = (file: string): string => `${repoUrl}/actions/workflows/${file}`;
+
 interface JsonTest {
   status?: string;
   duration?: number;
@@ -157,10 +161,10 @@ ${section('e2e', 'Resultados E2E por navegador', e2eRows.length > 0 ? table('Cas
 ${section('api', 'Resultados API', apiRows.length > 0 ? table('Casos API ejecutados', ['Test', 'Grupo', 'Tags', 'Estado', 'Duración', 'Error'], apiRows) : '<p>NO EJECUTADO: no existe reports/api-results.json.</p>')}
 ${section('carga', 'JMeter', jmeterRows.length > 0 ? table('Estadísticas de carga', ['Transacción', 'Muestras', 'Errores', 'Media', 'p95', 'Máximo'], jmeterRows) : '<p>NO EJECUTADO: no existe load/report/statistics.json.</p>')}
 ${section('seguridad', 'Seguridad OWASP', table('Reportes generados por CI', ['Herramienta', 'Estado', 'Enlace'], [
-  `<tr><td>ZAP Baseline</td><td>${existsSync('reports/security/zap-report.html') ? 'OK' : 'NO EJECUTADO'}</td><td><a href="reports/security/zap-report.html">Ver</a></td></tr>`,
-  `<tr><td>SCA npm audit</td><td>${existsSync('reports/security/sca-report.html') ? 'OK' : 'NO EJECUTADO'}</td><td><a href="reports/security/sca-report.html">Ver</a></td></tr>`,
+  `<tr><td>ZAP Baseline</td><td>${existsSync('reports/security/zap-report.html') ? 'OK' : 'NO EJECUTADO'}</td><td><a href="${workflow('security.yml')}">Ver en CI</a></td></tr>`,
+  `<tr><td>SCA npm audit</td><td>${existsSync('reports/security/sca-report.html') ? 'OK' : 'NO EJECUTADO'}</td><td><a href="${workflow('security.yml')}">Ver en CI</a></td></tr>`,
 ]))}
-${section('detalle', 'Detalle y evidencias', `<ul><li><a href="playwright-report/e2e/index.html">Reporte Playwright E2E</a></li><li><a href="playwright-report/api/index.html">Reporte Playwright API</a></li><li><a href="load/report/index.html">Reporte JMeter HTML</a></li><li><a href="load/BASELINE.md">Baseline</a></li><li><a href="reports/evolucion.log">Evolución verificada</a></li></ul>`)}
+${section('detalle', 'Detalle y evidencias', `<ul><li><a href="${workflow('playwright.yml')}">Reporte Playwright E2E/API en CI</a></li><li><a href="${workflow('jmeter.yml')}">Reporte JMeter HTML en CI</a></li><li><a href="${blob('load/BASELINE.md')}">Baseline</a></li><li><a href="${blob('reports/evolucion.log')}">Evolución verificada</a></li></ul>`)}
 ${section('criterios', 'Criterios de aceptación', table('Evaluación automática', ['Criterio', 'Estado'], criteria.map(([label, ok]) => `<tr><td>${escapeHtml(label)}</td><td class="${ok ? 'ok' : 'bad'}">${ok ? '✅ PASS' : '❌ FAIL'}</td></tr>`)))}
 </main><footer>Informe generado por scripts/generate-report.ts · texto dinámico escapado · sin dependencias externas.</footer></body></html>`;
 
