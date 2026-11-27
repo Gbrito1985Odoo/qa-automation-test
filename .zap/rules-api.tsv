@@ -1,0 +1,5 @@
+# Rule ID	Action	Description
+10015	IGNORE	Cache-control incompleto en API pública de demostración
+10021	IGNORE	X-Content-Type-Options ausente; documentado en SEGURIDAD.md
+10020	IGNORE	X-Frame-Options ausente; documentado en SEGURIDAD.md
+10202	IGNORE	Absence of Anti-CSRF Tokens: API Booker usa autenticación por token y no formularios web

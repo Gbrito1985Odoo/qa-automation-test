@@ -1,0 +1,6 @@
+# Rule ID	Action	Description
+10015	IGNORE	Incomplete or no Cache-control Header (sitio público de demostración, contenido no sensible)
+10011	IGNORE	Cookie Without Secure Flag (cookie de sesión de SauceDemo en entorno demo HTTP/HTTPS)
+10016	IGNORE	Web Browser XSS Protection Not Enabled (cabecera obsoleta en navegadores modernos)
+10021	IGNORE	X-Content-Type-Options Header Missing (documentado como hallazgo Medium en SEGURIDAD.md)
+10020	IGNORE	X-Frame-Options Header Missing (documentado como hallazgo Medium en SEGURIDAD.md)

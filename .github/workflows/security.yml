@@ -1,0 +1,86 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  zap-baseline:
+    name: ZAP Baseline Scan (SauceDemo)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: zaproxy/action-baseline@v0.15.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target: 'https://www.saucedemo.com'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a -j'
+          allow_issue_writing: false
+          fail_action: true
+          artifact_name: 'zap-baseline-report'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-baseline-report
+          path: report_html.html
+          retention-days: 30
+
+  zap-api-scan:
+    name: ZAP API Scan (Booker)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: zaproxy/action-api-scan@v0.9.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          format: openapi
+          target: 'https://restful-booker.herokuapp.com/apidoc'
+          rules_file_name: '.zap/rules-api.tsv'
+          fail_action: false
+          artifact_name: 'zap-api-report'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-api-report
+          path: report_html.html
+          retention-days: 30
+
+  dependency-check:
+    name: OWASP Dependency-Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Install Dependency-Check
+        run: |
+          VERSION=$(curl -s https://jeremylong.github.io/DependencyCheck/current.txt)
+          curl -sL "https://github.com/jeremylong/DependencyCheck/releases/download/v$VERSION/dependency-check-$VERSION-release.zip" -o dc.zip
+          unzip -q dc.zip
+      - name: Scan
+        run: |
+          mkdir -p reports/security
+          ./dependency-check/bin/dependency-check.sh \
+            --project "qa-automation-test" \
+            --scan . \
+            --format HTML \
+            --out reports/security/dependency-check-report.html \
+            --failOnCVSS 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-check-report
+          path: reports/security/dependency-check-report.html
+          retention-days: 30
