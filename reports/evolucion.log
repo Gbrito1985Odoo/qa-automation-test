@@ -1,3 +1,4 @@
 [2026-11-27T10:34:00Z] TAREA 0 — comando: gh repo create + git init + git push + gh secret set — resultado: PASS — notas: repo público creado, rama main, 4 secrets configurados; push requirió gh auth setup-git tras fallo inicial de credenciales.
 [2026-11-27T10:40:00Z] TAREA 1 — comando: npm ci && npx tsc --noEmit && npm run lint — resultado: PASS — notas: scaffold TS estricto, ESLint y Prettier; Node local v22.16.0 (nvmrc 20).
 [2026-11-27T10:48:00Z] TAREA 2 — comando: npm run test:e2e -- e2e/tests/login.spec.ts — resultado: PASS — notas: 8 verdes (4 × chromium/firefox); fix: testIdAttribute=data-test y selector real del menú; navegadores instalados vía mirror azureedge.
+[2026-11-27T10:58:00Z] TAREA 3 — comando: npm run test:e2e -- e2e/tests/cart.spec.ts e2e/tests/checkout.spec.ts e2e/tests/regression.spec.ts — resultado: PASS — notas: 14 verdes (7 casos × 2 navegadores); fix: data-test reales checkout/checkout-button→checkout, continue→continue, finish→finish.

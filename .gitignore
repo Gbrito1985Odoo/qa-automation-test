@@ -5,6 +5,7 @@ load/report/
 load/results.jtl
 .env
 reports/history/
+reports/*.json
 reports/security/*.html
 docs/manual/evidencias/*.png
 *.log

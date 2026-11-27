@@ -15,8 +15,8 @@ export class CheckoutPage {
     this.firstName = page.getByTestId('firstName');
     this.lastName = page.getByTestId('lastName');
     this.postalCode = page.getByTestId('postalCode');
-    this.continueButton = page.getByTestId('continue-button');
-    this.finishButton = page.getByTestId('finish-button');
+    this.continueButton = page.getByTestId('continue');
+    this.finishButton = page.getByTestId('finish');
     this.error = page.getByTestId('error');
     this.completeHeader = page.getByTestId('complete-header');
   }

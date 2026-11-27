@@ -11,7 +11,7 @@ export class CartPage {
     this.page = page;
     this.title = page.getByTestId('title');
     this.items = page.getByTestId('inventory-item');
-    this.checkoutButton = page.getByTestId('checkout-button');
+    this.checkoutButton = page.getByTestId('checkout');
     this.continueShopping = page.getByTestId('continue-shopping');
   }
 
