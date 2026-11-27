@@ -15,7 +15,7 @@ Fuera de alcance: explotación activa, pruebas sobre servicios de producción y 
 |---|---|---|
 | OWASP ZAP Baseline | `zaproxy/action-baseline@v0.15.0` | `-a -j`, `fail_action: true`, reglas `.zap/rules.tsv` |
 | OWASP ZAP API Scan | `zaproxy/action-api-scan@v0.9.0` | formato `openapi`, informativo (`continue-on-error`) |
-| OWASP Dependency-Check | release latest de `dependency-check/DependencyCheck` | HTML + `--failOnCVSS 7` |
+| OWASP Dependency-Check | `v12.1.0` (pin; v13 exige API key de NVD) | HTML + `--failOnCVSS 7` |
 
 ## Baseline de hallazgos
 
