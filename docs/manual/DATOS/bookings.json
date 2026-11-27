@@ -1,0 +1,41 @@
+{
+  "valid": {
+    "firstname": "QA",
+    "lastname": "Automation",
+    "totalprice": 150,
+    "depositpaid": true,
+    "bookingdates": {
+      "checkin": "2026-01-01",
+      "checkout": "2026-01-05"
+    },
+    "additionalneeds": "Breakfast"
+  },
+  "update": {
+    "firstname": "Updated",
+    "lastname": "Automation",
+    "totalprice": 299,
+    "depositpaid": true,
+    "bookingdates": {
+      "checkin": "2026-01-01",
+      "checkout": "2026-01-05"
+    },
+    "additionalneeds": "Breakfast"
+  },
+  "patch": {
+    "firstname": "Patched"
+  },
+  "invalid": {
+    "firstname": 123,
+    "totalprice": "NaN"
+  },
+  "auth": {
+    "valid": {
+      "username": "admin",
+      "password": "password123"
+    },
+    "invalid": {
+      "username": "wrong_user",
+      "password": "wrong_pass"
+    }
+  }
+}
