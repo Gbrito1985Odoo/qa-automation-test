@@ -1,0 +1,55 @@
+name: Playwright
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox
+      - name: E2E ${{ matrix.project }}
+        run: npx playwright test --config e2e/playwright.config.ts --project=${{ matrix.project }}
+      - name: API
+        if: matrix.project == 'chromium'
+        run: npx playwright test --config api/playwright.config.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-${{ matrix.project }}
+          path: |
+            playwright-report/
+            reports/*.json
+            test-results/
+          retention-days: 30
+
+  cleanup:
+    if: always()
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Keep last 5 runs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api "repos/${{ github.repository }}/actions/runs?per_page=100" \
+            --jq '.workflow_runs[] | select(.name=="Playwright") | .id' \
+            | tail -n +6 \
+            | while read -r id; do gh api -X DELETE "repos/${{ github.repository }}/actions/runs/$id" >/dev/null || true; done

@@ -1,0 +1,40 @@
+name: JMeter Load
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  load:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Install JMeter 5.6.3
+        run: |
+          curl -sL https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz -o jmeter.tgz
+          tar -xzf jmeter.tgz
+          echo "$PWD/apache-jmeter-5.6.3/bin" >> "$GITHUB_PATH"
+      - run: npm ci
+      - name: Run load plan
+        run: npm run jmeter:load
+      - name: Check error rate < 1%
+        run: |
+          total=$(($(wc -l < load/results.jtl) - 1))
+          failed=$(awk -F, 'NR > 1 && $8 == "false" { n++ } END { print n+0 }' load/results.jtl)
+          awk -v t="$total" -v f="$failed" 'BEGIN { r=(t>0 ? f/t*100 : 100); printf "samples=%d failed=%d error_rate=%.2f%%\n", t, f, r; exit (r < 1 ? 0 : 1) }'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jmeter-report
+          path: |
+            load/report/
+            load/results.jtl
+          retention-days: 30
