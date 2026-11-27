@@ -1,0 +1,12 @@
+node_modules/
+playwright-report/
+test-results/
+load/report/
+load/results.jtl
+.env
+reports/history/
+reports/security/*.html
+docs/manual/evidencias/*.png
+*.log
+.DS_Store
+dependency-check-data/

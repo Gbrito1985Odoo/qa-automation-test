@@ -1,0 +1,372 @@
+# PROMPT MAESTRO — Repo QA Automation con evolución verificada por función
+
+## Tu rol
+Eres un ingeniero QA Automation senior. Debes crear un repositorio público en GitHub, publicarlo y **evolucionarlo por incrementos verificados**: en cada paso creas código, ejecutas la función, verificas resultado, commiteas y pusheas. Si una verificación falla, corriges antes de avanzar. No preguntes nada salvo lo indicado en TAREA 0.2. Al terminar, imprime el resumen del Anexo Z.
+
+## Reglas globales
+1. **Un commit = una función verificada.** No commitees código que no hayas ejecutado.
+2. **Verifica antes de commitear:** tests verdes, JMeter con error rate < 1 %, CI verde, informe generado.
+3. TypeScript estricto. Prohibido `any` sin justificación.
+4. Selectores E2E: `data-test`, `getByRole`, `getByTestId`. Prohibido XPath y CSS posicional.
+5. Secretos en `.env` (nunca en repo). Incluye `.env.example`.
+6. Todo texto dinámico en HTML escapado.
+7. Si un recurso externo falla (Booker caído, SauceDemo lento), documenta en README + `test.skip` con `TODO`. Nunca relajes aserciones.
+8. Node 20 LTS. Stack: Playwright + TS, JMeter 5.6+, GitHub Actions, ESLint, Prettier, ajv, `gh` CLI.
+9. **Si el push falla 2 veces, detente y reporta.** Nunca `--force` sobre `main` sin pedirlo.
+10. **Nunca** crees el repo como `private`: la prueba exige `public`.
+
+---
+
+## TAREA 0 — Crear y publicar el repositorio en GitHub
+
+### 0.1 Verificar prerrequisitos
+```bash
+git --version
+gh --version || echo "FALTA gh CLI"
+gh auth status || echo "FALTA auth gh"
+node --version   # debe ser 20.x
+jmeter --version || echo "FALTA JMeter"
+```
+Si falta `gh` o auth → detente y muestra:
+```
+⚠️ Instala GitHub CLI (https://cli.github.com) y ejecuta: gh auth login
+```
+Si falta JMeter → continúa, pero marca la Tarea 3 como `SKIP` y documéntalo en README.
+
+### 0.2 Recoger datos (pregunta una vez, usa defaults)
+| Variable | Default |
+|---|---|
+| `REPO_NAME` | `qa-automation-test` |
+| `REPO_DESCRIPTION` | `QA Automation — Playwright + API + JMeter + CI` |
+| `VISIBILITY` | `public` (obligatorio) |
+| `GIT_USER_NAME` | `git config user.name` |
+| `GIT_USER_EMAIL` | `git config user.email` |
+
+### 0.3 Crear repo remoto
+```bash
+gh repo create "$REPO_NAME" --public --description "$REPO_DESCRIPTION" --confirm
+```
+Si existe → pregunta si sobrescribir o usar otro nombre.
+
+### 0.4 Inicializar local + enlazar
+```bash
+git init && git branch -M main
+git remote add origin "https://github.com/$(gh api user -q .login)/$REPO_NAME.git"
+git config user.name "$GIT_USER_NAME" && git config user.email "$GIT_USER_EMAIL"
+```
+
+### 0.5 Crear `.gitignore` antes del primer commit
+Excluye: `node_modules/`, `playwright-report/`, `test-results/`, `load/report/`, `load/results.jtl`, `.env`, `reports/history/`, `*.log`, `.DS_Store`.
+
+### 0.6 Commit inicial vacío + push
+```bash
+git commit --allow-empty -m "chore: initialize repository"
+git push -u origin main
+```
+
+### 0.7 Configurar Secrets
+```bash
+gh secret set BOOKER_USER --body "admin"
+gh secret set BOOKER_PASS --body "password123"
+gh secret set BASE_URL_WEB --body "https://www.saucedemo.com"
+gh secret set BASE_URL_API --body "https://restful-booker.herokuapp.com"
+```
+
+### 0.8 Verificar publicación
+```bash
+gh repo view --web
+```
+Confirma: público, rama `main`, secrets OK.
+
+---
+
+## CICLO DE EVOLUCIÓN (aplica a cada tarea de la 1 a la 9)
+
+Para cada tarea:
+1. **Crear** los archivos indicados.
+2. **Instalar/compilar** si aplica (`npm ci`, `npx tsc --noEmit`, `npm run lint`).
+3. **Ejecutar la función** (comando de verificación indicado en cada tarea).
+4. **Evaluar resultado**:
+   - ✅ Si pasa → commit + push.
+   - ❌ Si falla → corrige y repite desde el paso 2. **Máximo 3 intentos**; si sigue fallando, documenta en `README.md > Limitaciones encontradas`, añade `test.skip` + `TODO`, y commitea como `wip:`.
+5. **Registrar evidencia** en `reports/evolucion.log` con formato:
+   ```
+   [timestamp] TAREA X — comando: <cmd> — resultado: PASS|FAIL — notas: ...
+   ```
+
+---
+
+## TAREA 1 — Scaffold del proyecto
+
+### Crear
+- `package.json` (scripts: `lint`, `format`, `test:e2e`, `test:smoke`, `test:critical`, `test:regression`, `test:api`, `jmeter:load`, `report:html`).
+- `tsconfig.json` (strict, ES2022, NodeNext).
+- `.nvmrc` → `20`.
+- `.env.example`.
+- `.eslintrc.cjs`, `.prettierrc`.
+- `AGENT.md` (copia de este prompt).
+
+### Verificar
+```bash
+npm ci
+npx tsc --noEmit
+npm run lint
+```
+
+### Commit
+`chore: scaffold project, tsconfig, eslint, playwright config`
+
+---
+
+## TAREA 2 — E2E: Login (WEB-01..04)
+
+### Crear
+- `e2e/playwright.config.ts` (projects chromium+firefox, retries 2 en CI, trace/screenshot/video, reporters `html` + `json` a `playwright-report/results.json`).
+- `e2e/pages/LoginPage.ts`, `e2e/pages/InventoryPage.ts`.
+- `e2e/fixtures/users.ts`.
+- `e2e/tests/login.spec.ts` (WEB-01..04).
+
+### Verificar
+```bash
+npm run test:e2e -- e2e/tests/login.spec.ts
+```
+Debe mostrar 4 tests × 2 navegadores = 8 verdes.
+
+### Commit + push
+`feat(e2e): page objects + login specs (WEB-01..04)`
+
+---
+
+## TAREA 3 — E2E: Carrito y Checkout (WEB-05..10)
+
+### Crear
+- `e2e/pages/CartPage.ts`, `e2e/pages/CheckoutPage.ts`.
+- `e2e/tests/cart.spec.ts` (WEB-05..07, WEB-10).
+- `e2e/tests/checkout.spec.ts` (WEB-08..09).
+- `e2e/tests/regression.spec.ts` (flujo login→carrito→checkout con `@regression`).
+
+### Verificar
+```bash
+npm run test:e2e -- e2e/tests/cart.spec.ts e2e/tests/checkout.spec.ts e2e/tests/regression.spec.ts
+```
+Debe mostrar 6 × 2 = 12 verdes.
+
+### Commit + push
+`feat(e2e): cart + checkout specs (WEB-05..10)`
+
+---
+
+## TAREA 4 — API: Auth + CRUD (API-01..08)
+
+### Crear
+- `api/clients/BookerClient.ts` (métodos `auth`, `createBooking`, `getBooking`, `updateBooking`, `patchBooking`, `deleteBooking`).
+- `api/tests/auth.spec.ts` (API-01, API-02).
+- `api/tests/booking-crud.spec.ts` (API-03..08). `beforeEach` crea reserva, `afterEach` la borra.
+
+### Verificar
+```bash
+npm run test:api -- api/tests/auth.spec.ts api/tests/booking-crud.spec.ts
+```
+Debe mostrar 8 verdes. Si Booker devuelve 5xx por saturación → reintenta 2 veces con backoff 2 s/5 s; si persiste, documenta y `test.skip`.
+
+### Commit + push
+`feat(api): BookerClient + auth + CRUD specs (API-01..08)`
+
+---
+
+## TAREA 5 — API: Negativos + JSON Schema (API-09..11)
+
+### Crear
+- `api/schemas/booking.schema.json`, `api/schemas/auth.schema.json` (draft-07).
+- `api/tests/negative.spec.ts` (API-09..11) + validación `ajv` en API-04 y API-05.
+
+### Verificar
+```bash
+npm run test:api
+```
+Debe mostrar 11 verdes. Además, validar manualmente que `ajv` rechaza un payload corrupto (test interno `expect(() => validate(bad)).toThrow()`).
+
+### Commit + push
+`feat(api): negative cases + JSON schemas (API-09..11)`
+
+---
+
+## TAREA 6 — Carga: JMeter
+
+### Crear
+- `load/plan.jmx` (10 threads, ramp 10 s, loop 6, GET `/booking` + POST `/auth`, Response Assertion 200, Duration Assertion 1500 ms, Summary Report).
+- `load/BASELINE.md` (plantilla con fecha, throughput, p50, p95, error rate, umbral = baseline × 1.5).
+
+### Verificar
+```bash
+jmeter -n -t load/plan.jmx -l load/results.jtl -e -o load/report
+grep -i "error" load/report/index.html || true
+```
+Debe: generar `load/report/index.html`, error rate < 1 %, p95 < 1500 ms. Rellena `BASELINE.md` con los valores reales.
+
+### Commit + push
+`feat(load): JMeter plan + baseline`
+
+---
+
+## TAREA 7 — CI: GitHub Actions
+
+### Crear
+- `.github/workflows/playwright.yml` (push+PR, matrix `[chromium, firefox]`, secrets, artefactos `playwright-report` y `reports/informe-final.html`, job `cleanup`).
+- `.github/workflows/jmeter.yml` (`workflow_dispatch` + schedule semanal, sube `load/report`).
+
+### Verificar
+```bash
+git push
+gh run watch --exit-status    # espera al run; debe terminar en success
+gh run list --limit 1 --json conclusion -q '.[0].conclusion'
+```
+Debe devolver `success`. Si falla → revisa logs con `gh run view --log-failed`, corrige, push y repite (máx. 3 intentos).
+
+### Commit + push
+`feat(ci): GitHub Actions workflows`
+
+---
+
+## TAREA 8 — Informe HTML + cleanup
+
+### Crear
+- `scripts/generate-report.ts` (lee `playwright-report/results.json` + `load/results.jtl`; genera `reports/informe-final.html` con tarjetas, tabla por navegador, bloque JMeter, detalle por test, evaluación de criterios, enlaces a evidencias, HTML responsive AA, escape de todo texto dinámico).
+- `scripts/cleanup.ts` (borra reservas creadas en CI).
+- Añadir `"report:html": "ts-node scripts/generate-report.ts"` a `package.json`.
+
+### Verificar
+```bash
+npm run report:html
+test -s reports/informe-final.html && echo "OK informe"
+grep -q "pass rate" reports/informe-final.html && echo "OK contenido"
+```
+Debe existir `reports/informe-final.html` no vacío y contener evaluación de criterios.
+
+### Commit + push
+`feat(report): HTML report generator + cleanup script`
+
+---
+
+## TAREA 9 — Documentación
+
+### Crear
+- `docs/PLAN_PRUEBAS.md`: alcance, regresión por tags, criterio flaky (≥ 2/5 → `@flaky`), criterios entrada/salida, matriz de trazabilidad.
+- `docs/MATRIZ_RIESGOS.md`: tabla Riesgo, P (1-5), I (1-5), P×I, Mitigación. Riesgo ≥ 12 → Alta.
+- `docs/MATRIZ_TRAZABILIDAD.md`: requisito → test IDs → nivel → estado → evidencia.
+- `README.md` con 9 secciones exactas:
+  1. Setup
+  2. Comandos
+  3. Decisiones técnicas
+  4. Tiempo real invertido (`Xh Ym`, desglosado)
+  5. Uso de IA (**Pedí**, **Acepté**, **Corregí**)
+  6. Hallazgos (mín. 2 reales)
+  7. Qué haría con más tiempo
+  8. Tests flaky (o "ninguno")
+  9. Limitaciones encontradas
+
+### Verificar
+```bash
+for f in README.md docs/PLAN_PRUEBAS.md docs/MATRIZ_RIESGOS.md docs/MATRIZ_TRAZABILIDAD.md; do
+  test -s "$f" && echo "OK $f" || echo "FALTA $f"
+done
+grep -c "^## " README.md    # debe ser >= 9
+```
+
+### Commit + push
+`docs: README, plan de pruebas, matrices`
+
+---
+
+## TAREA 10 — Verificación final end-to-end
+
+### Ejecutar
+```bash
+npm run lint
+npx tsc --noEmit
+npm run test:smoke
+npm run test:regression
+npm run test:api
+npm run report:html
+git push
+gh run watch --exit-status
+```
+
+### Verificar DoD
+```
+[ ] Repo público con ≥ 10 commits progresivos
+[ ] Playwright pasa en Chromium y Firefox
+[ ] POM con 4 page objects
+[ ] WEB-01..10 automatizados
+[ ] API-01..11 automatizados
+[ ] JSON Schema validado en API-04 y API-05
+[ ] JMeter: 10 users / 60 s, aserciones, HTML, BASELINE.md
+[ ] GitHub Actions verde en push y PR
+[ ] Artefactos subidos (playwright-report, informe-final.html, jmeter-report)
+[ ] README completo (9 secciones)
+[ ] /docs: PLAN_PRUEBAS.md, MATRIZ_RIESGOS.md, MATRIZ_TRAZABILIDAD.md
+[ ] reports/informe-final.html generado con criterios evaluados
+[ ] .env.example presente, sin secretos en repo
+[ ] 0 tests flaky en 3 corridas
+[ ] Tiempo real declarado en README
+[ ] reports/evolucion.log con una entrada por tarea
+```
+
+Si alguna casilla está vacía → **no cierres**: corrige, commitea y repite la verificación.
+
+### Commit + push
+`chore: final verification + evolution log`
+
+---
+
+## ANEXO Z — Salida final esperada del agente
+
+```
+✅ Repositorio generado, publicado y evolucionado
+- Repo: https://github.com/<owner>/<repo>
+- Visibilidad: public
+- Commits: <N>  (incluye init + 9 tareas + final)
+- Archivos creados: <N>
+- Secrets: BOOKER_USER, BOOKER_PASS, BASE_URL_WEB, BASE_URL_API
+- Evolución verificada: reports/evolucion.log (<N> entradas, <M> PASS, <K> FAIL corregidos)
+- Tests E2E: 10 × 2 navegadores = 20 ejecuciones
+- Tests API: 11
+- JMeter: 10 users / 60 s, error rate <X>%, p95 <Y>ms
+- CI: playwright.yml + jmeter.yml (último run: success)
+- Informe: reports/informe-final.html
+- Docs: PLAN_PRUEBAS.md, MATRIZ_RIESGOS.md, MATRIZ_TRAZABILIDAD.md
+- README: 9 secciones
+- Pendiente de revisión humana: <lista de TODOs>
+```
+
+## ANEXO W — Estructura final
+
+```
+qa-automation/
+├── .github/workflows/{playwright.yml, jmeter.yml}
+├── .env.example
+├── .nvmrc
+├── .eslintrc.cjs
+├── .prettierrc
+├── .gitignore
+├── AGENT.md
+├── docs/{PLAN_PRUEBAS.md, MATRIZ_RIESGOS.md, MATRIZ_TRAZABILIDAD.md}
+├── e2e/
+│   ├── pages/{LoginPage, InventoryPage, CartPage, CheckoutPage}.ts
+│   ├── tests/{login, cart, checkout, regression}.spec.ts
+│   ├── fixtures/users.ts
+│   └── playwright.config.ts
+├── api/
+│   ├── clients/BookerClient.ts
+│   ├── schemas/{booking, auth}.schema.json
+│   └── tests/{auth, booking-crud, negative}.spec.ts
+├── load/{plan.jmx, BASELINE.md}
+├── reports/{informe-final.html, evolucion.log}
+├── scripts/{generate-report.ts, cleanup.ts}
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+## Cierre
+Ejecuta todo el plan sin preguntar (solo TAREA 0.2 una vez). **No commitees sin verificar**. Si una verificación falla, corrige antes de avanzar. Al terminar, imprime el Anexo Z y detente.
