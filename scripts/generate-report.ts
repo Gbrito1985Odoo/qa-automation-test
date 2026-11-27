@@ -124,7 +124,7 @@ const criteria: Array<[string, boolean]> = [
   ['API 11 casos automatizados', (api?.stats?.expected ?? 0) >= 11],
   ['JMeter error rate < 1 %', (totalStat?.errorPct ?? 100) < 1],
   ['JMeter p95 < 1500 ms', (totalStat?.pct2ResTime ?? 99999) < 1500],
-  ['Securidad con reportes HTML', existsSync('reports/security/zap-report.html') && existsSync('reports/security/dependency-check-report.html')],
+  ['Seguridad con reportes HTML', existsSync('reports/security/zap-report.html') && existsSync('reports/security/sca-report.html')],
   ['Evolución registrada', existsSync('reports/evolucion.log')],
 ];
 
@@ -158,7 +158,7 @@ ${section('api', 'Resultados API', apiRows.length > 0 ? table('Casos API ejecuta
 ${section('carga', 'JMeter', jmeterRows.length > 0 ? table('Estadísticas de carga', ['Transacción', 'Muestras', 'Errores', 'Media', 'p95', 'Máximo'], jmeterRows) : '<p>NO EJECUTADO: no existe load/report/statistics.json.</p>')}
 ${section('seguridad', 'Seguridad OWASP', table('Reportes generados por CI', ['Herramienta', 'Estado', 'Enlace'], [
   `<tr><td>ZAP Baseline</td><td>${existsSync('reports/security/zap-report.html') ? 'OK' : 'NO EJECUTADO'}</td><td><a href="reports/security/zap-report.html">Ver</a></td></tr>`,
-  `<tr><td>Dependency-Check</td><td>${existsSync('reports/security/dependency-check-report.html') ? 'OK' : 'NO EJECUTADO'}</td><td><a href="reports/security/dependency-check-report.html">Ver</a></td></tr>`,
+  `<tr><td>SCA npm audit</td><td>${existsSync('reports/security/sca-report.html') ? 'OK' : 'NO EJECUTADO'}</td><td><a href="reports/security/sca-report.html">Ver</a></td></tr>`,
 ]))}
 ${section('detalle', 'Detalle y evidencias', `<ul><li><a href="playwright-report/e2e/index.html">Reporte Playwright E2E</a></li><li><a href="playwright-report/api/index.html">Reporte Playwright API</a></li><li><a href="load/report/index.html">Reporte JMeter HTML</a></li><li><a href="load/BASELINE.md">Baseline</a></li><li><a href="reports/evolucion.log">Evolución verificada</a></li></ul>`)}
 ${section('criterios', 'Criterios de aceptación', table('Evaluación automática', ['Criterio', 'Estado'], criteria.map(([label, ok]) => `<tr><td>${escapeHtml(label)}</td><td class="${ok ? 'ok' : 'bad'}">${ok ? '✅ PASS' : '❌ FAIL'}</td></tr>`)))}

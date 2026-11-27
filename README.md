@@ -62,7 +62,7 @@ cp .env.example .env
   2. El menú no era `open-menu-button`: el DOM real expone `open-menu` y un botón "Open Menu".
   3. Checkout usa `checkout`, `continue` y `finish`, no los IDs asumidos en el prompt original.
   4. `statistics.json` de JMeter es un objeto por transacción, no un array; normalicé con `Object.values`.
-  5. El token OAuth de `gh` carece de scope `workflow`:-usé una deploy key con escritura para publicar los workflows.
+   5. El token OAuth de `gh` carece de scope `workflow`: usé una deploy key con escritura para publicar los workflows.
   6. La descarga de navegadores desde `cdn.playwright.dev` devolvió 403; instalé Firefox desde el mirror `playwright.azureedge.net` y usé Chrome del sistema en local.
 
 ## 6. Hallazgos
@@ -86,7 +86,7 @@ No se detectaron fallos intermitentes en 3 corridas consecutivas de smoke/regres
 
 ## 9. Limitaciones
 
-- Docker no está disponible en el entorno local: ZAP no se ejecuta localmente; la sección SCA (Dependency-Check) y el workflow de seguridad se validan en GitHub Actions.
+- Docker no está disponible en el entorno local: ZAP no se ejecuta localmente; se valida en GitHub Actions. El gate SCA obligatorio usa `npm audit` (0 High/Critical); Dependency-Check queda como job opcional (`ENABLE_DEPENDENCY_CHECK=true`) por falta de `NVD_API_KEY`.
 - Node local es v22.16.0 aunque `.nvmrc` fija 20; CI usa 20.
 - Los reportes HTML generados por CI se descargan como artefactos; `reports/security/*.html` está excluido del repo por tamaño.
 - Las capturas manuales se referencian desde `docs/manual/EVIDENCIAS/README.md`, no se versionan.

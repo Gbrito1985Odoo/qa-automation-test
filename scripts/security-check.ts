@@ -1,9 +1,6 @@
 import { existsSync, statSync } from 'node:fs';
 
-const required: string[] = [
-  'reports/security/zap-report.html',
-  'reports/security/dependency-check-report.html',
-];
+const required: string[] = ['reports/security/zap-report.html', 'reports/security/sca-report.html'];
 
 let ok = true;
 for (const file of required) {

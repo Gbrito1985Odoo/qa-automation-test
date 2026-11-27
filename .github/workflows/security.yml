@@ -43,8 +43,33 @@ jobs:
           fail_action: false
           artifact_name: 'zap-api-report'
 
+  sca-audit:
+    name: SCA npm audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Scan
+        run: |
+          mkdir -p reports/security
+          npm audit --json > reports/security/npm-audit.json || true
+          npx ts-node scripts/generate-sca-report.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sca-report
+          path: reports/security/sca-report.html
+          retention-days: 30
+
   dependency-check:
-    name: OWASP Dependency-Check
+    name: OWASP Dependency-Check (opcional)
+    if: ${{ vars.ENABLE_DEPENDENCY_CHECK == 'true' }}
+    continue-on-error: true
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

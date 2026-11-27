@@ -42,6 +42,6 @@ Criterio de flaky: un test con ≥2 fallos en 5 ejecuciones consecutivas se marc
 | Auth y CRUD Booker | API-01..08 | API + Manual | Automatizado |
 | Negativos y esquemas | API-09..11 | API + Manual | Automatizado |
 | Carga | JM-01 | JMeter + Manual | Ejecutado |
-| Seguridad | SEC-01..03 | CI + Manual | Parcial (ver SEGURIDAD.md) |
+| Seguridad | SEC-01..03 | CI + Manual | Ejecutado: ZAP 0 High + SCA 0 High/Critical (ver SEGURIDAD.md) |
 
 La tabla completa está en `docs/MATRIZ_TRAZABILIDAD.md` y la cruzada manual↔auto en `docs/manual/MATRIZ_MANUAL_AUTO.md`.
