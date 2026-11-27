@@ -1,0 +1,2 @@
+[2026-11-27T10:34:00Z] TAREA 0 — comando: gh repo create + git init + git push + gh secret set — resultado: PASS — notas: repo público creado, rama main, 4 secrets configurados; push requirió gh auth setup-git tras fallo inicial de credenciales.
+[2026-11-27T10:40:00Z] TAREA 1 — comando: npm ci && npx tsc --noEmit && npm run lint — resultado: PASS — notas: scaffold TS estricto, ESLint y Prettier; Node local v22.16.0 (nvmrc 20).
