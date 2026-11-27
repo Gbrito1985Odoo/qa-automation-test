@@ -43,15 +43,15 @@ cp .env.example .env
 
 | Bloque | Tiempo |
 |---|---:|
-| Setup y GitHub (Tarea 0) | 25 min |
-| Scaffold y configuración (Tarea 1) | 20 min |
-| E2E WEB-01..10 (Tareas 2-3) | 1 h 20 min |
-| API API-01..11 (Tareas 4-5) | 45 min |
-| JMeter y CI (Tareas 6-7) | 1 h 05 min |
-| Informe, docs y gate (Tareas 8-10) | 1 h 10 min |
-| QA manual y trazabilidad (Tareas 11-12) | 1 h 40 min |
-| Seguridad OWASP (Tarea 14) | 50 min |
-| **Total** | **8 h 35 min** |
+| Setup y GitHub (Tarea 0) | 10 min |
+| Scaffold y configuración (Tarea 1) | 10 min |
+| E2E WEB-01..10 (Tareas 2-3) | 30 min |
+| API API-01..11 (Tareas 4-5) | 20 min |
+| JMeter y CI (Tareas 6-7) | 25 min |
+| Informe, docs y gate (Tareas 8-10) | 25 min |
+| QA manual y trazabilidad (Tareas 11-12) | 20 min |
+| Seguridad OWASP (Tarea 14) | 15 min (más espera de CI) |
+| **Total** | **2 h 35 min** |
 
 ## 5. Uso de IA (Pedí / Acepté / Corregí)
 

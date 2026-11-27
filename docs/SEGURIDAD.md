@@ -22,8 +22,8 @@ Fuera de alcance: explotación activa, pruebas sobre servicios de producción y 
 
 | Herramienta | High | Medium | Low | Estado |
 |---|---:|---:|---:|---|
-| ZAP Baseline (SauceDemo) | 0 | 4 | 5 (11 info) | ✅ CI run `45992092380` |
-| ZAP API Scan (Booker) | 0 | 2 | 86 (6 info) | ✅ informativo, CI run `45992092380` |
+| ZAP Baseline (SauceDemo) | 0 | 4 | 5 (11 info) | ✅ CI run `45998268227` |
+| ZAP API Scan (Booker) | 0 | 2 | 84 (7 info) | ✅ informativo, CI run `45998268227` |
 | SCA npm audit | 0 | 6 moderate | 0 | ✅ gate local y CI |
 | Dependency-Check | — | — | — | SKIP justificado: NVD sin `NVD_API_KEY` excede el tiempo de CI |
 

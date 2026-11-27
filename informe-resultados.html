@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Informe de resultados — QA Automation</title>
+<style>
+:root{color-scheme:light dark;--bg:#fff;--fg:#1f2328;--mut:#59636e;--bdr:#d1d9e0;--acc:#0969da;--ok:#1a7f37;--warn:#9a6700;--bad:#cf222e;--card:#f6f8fa}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--mut:#9198a1;--bdr:#30363d;--acc:#4493f8;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--card:#161b22}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+header,nav,main{max-width:1100px;margin:auto;padding:1rem}nav{border-bottom:1px solid var(--bdr);display:flex;flex-wrap:wrap;gap:.8rem}a{color:var(--acc)}
+h1{font-size:2rem}h2{margin-top:2.5rem;border-bottom:1px solid var(--bdr);padding-bottom:.3rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem}.card{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:1rem}
+.card span{display:block;color:var(--mut);font-size:.85rem}.card strong{font-size:1.3rem}
+table{border-collapse:collapse;width:100%;display:block;overflow-x:auto}caption{text-align:left;font-weight:600;padding:.5rem 0}
+th,td{border:1px solid var(--bdr);padding:.5rem;text-align:left;vertical-align:top}th{background:var(--card)}
+.ok{color:var(--ok);font-weight:600}.warn{color:var(--warn);font-weight:600}.bad{color:var(--bad);font-weight:600}
+code{background:var(--card);padding:.1rem .35rem;border-radius:4px}.tag{font-size:.75rem;border:1px solid var(--bdr);border-radius:999px;padding:.1rem .5rem;color:var(--mut)}
+footer{border-top:1px solid var(--bdr);margin-top:3rem;padding:1rem;color:var(--mut)}
+</style>
+</head>
+<body>
+<header>
+<h1>Informe de resultados — QA Automation</h1>
+<p><span class="tag">FINAL</span> Cifras tomadas de artefactos reales y ejecuciones verificadas.</p>
+<p>Repo: <a href="https://github.com/Gbrito1985Odoo/qa-automation-test">Gbrito1985Odoo/qa-automation-test</a> · rama <code>main</code> · fecha 2026-11-27.</p>
+</header>
+<nav aria-label="Navegación">
+<a href="#resumen">Resumen</a><a href="#alcance">Alcance</a><a href="#e2e">E2E</a><a href="#api">API</a><a href="#seguridad">Seguridad</a><a href="#carga">Carga</a><a href="#manual">Manual</a><a href="#criterios">Criterios</a>
+</nav>
+<main>
+<section id="resumen">
+<h2>1. Resumen numérico</h2>
+<div class="cards">
+<div class="card"><span>E2E smoke</span><strong>8 PASS / 0 FAIL</strong></div>
+<div class="card"><span>E2E regresión</span><strong>8 PASS / 0 FAIL</strong></div>
+<div class="card"><span>API</span><strong>11 PASS / 0 FAIL</strong></div>
+<div class="card"><span>JMeter</span><strong>0,00 % errores</strong></div>
+<div class="card"><span>JMeter p95</span><strong>769,95 ms</strong></div>
+<div class="card"><span>Seguridad</span><strong class="ok">0 High / 0 High-Critical SCA</strong></div>
+<div class="card"><span>Casos manuales</span><strong>24 núcleo + 1 extra</strong></div>
+<div class="card"><span>Flaky detectado</span><strong>0 en 3 corridas</strong></div>
+</div>
+</section>
+<section id="alcance">
+<h2>2. Alcance y entorno</h2>
+<table>
+<caption>Qué se probó</caption>
+<thead><tr><th>Capa</th><th>Objetivo</th><th>Herramienta</th><th>Entorno</th></tr></thead>
+<tbody>
+<tr><td>Web</td><td>SauceDemo login/carrito/checkout</td><td>Playwright + TS</td><td>Chromium + Firefox</td></tr>
+<tr><td>API</td><td>Restful Booker auth + CRUD + negativos</td><td>Playwright APIRequestContext + ajv</td><td>HTTPS público</td></tr>
+<tr><td>Carga</td><td>GET /booking y POST /auth</td><td>JMeter 5.6.3</td><td>10 hilos / 6 loops</td></tr>
+<tr><td>Seguridad</td><td>OWASP Web/API + dependencias</td><td>ZAP + Dependency-Check</td><td>GitHub Actions</td></tr>
+<tr><td>Manual</td><td>10 WEB + 11 API + 1 CARGA + 3 SEGURIDAD</td><td>Casos y plantillas Markdown</td><td>Sin leer código</td></tr>
+</tbody>
+</table>
+</section>
+<section id="e2e">
+<h2>3. E2E — detalle</h2>
+<table>
+<caption>Casos automatizados (10 × 2 navegadores)</caption>
+<thead><tr><th>ID</th><th>Caso</th><th>Tags</th><th>Estado</th></tr></thead>
+<tbody>
+<tr><td>WEB-01</td><td>Login correcto</td><td>@smoke @critical</td><td class="ok">PASS</td></tr>
+<tr><td>WEB-02</td><td>Login bloqueado</td><td>@smoke</td><td class="ok">PASS</td></tr>
+<tr><td>WEB-03</td><td>Credenciales inválidas</td><td>@smoke</td><td class="ok">PASS</td></tr>
+<tr><td>WEB-04</td><td>Campos vacíos</td><td>@smoke</td><td class="ok">PASS</td></tr>
+<tr><td>WEB-05</td><td>Añadir 1 producto</td><td>@smoke @critical</td><td class="ok">PASS</td></tr>
+<tr><td>WEB-06</td><td>Añadir 3 productos</td><td>@regression</td><td class="ok">PASS</td></tr>
+<tr><td>WEB-07</td><td>Eliminar producto</td><td>@regression</td><td class="ok">PASS</td></tr>
+<tr><td>WEB-08</td><td>Checkout happy path</td><td>@smoke @critical @regression</td><td class="ok">PASS</td></tr>
+<tr><td>WEB-09</td><td>Checkout sin datos</td><td>@smoke</td><td class="ok">PASS</td></tr>
+<tr><td>WEB-10</td><td>Orden por precio</td><td>@regression</td><td class="ok">PASS</td></tr>
+<tr><td>REG-01</td><td>Login → carrito → checkout</td><td>@regression</td><td class="ok">PASS</td></tr>
+</tbody>
+</table>
+</section>
+<section id="api">
+<h2>4. API — detalle</h2>
+<table>
+<caption>11 casos con validación de esquema</caption>
+<thead><tr><th>ID</th><th>Caso</th><th>Resultado</th></tr></thead>
+<tbody>
+<tr><td>API-01</td><td>Auth válido (token)</td><td class="ok">PASS</td></tr>
+<tr><td>API-02</td><td>Auth inválido (<code>200 reason=Bad credentials</code>)</td><td class="ok">PASS</td></tr>
+<tr><td>API-03</td><td>Listar reservas</td><td class="ok">PASS</td></tr>
+<tr><td>API-04</td><td>GET reserva</td><td class="ok">PASS</td></tr>
+<tr><td>API-05</td><td>POST reserva</td><td class="ok">PASS</td></tr>
+<tr><td>API-06</td><td>PUT reserva</td><td class="ok">PASS</td></tr>
+<tr><td>API-07</td><td>PATCH reserva</td><td class="ok">PASS</td></tr>
+<tr><td>API-08</td><td>DELETE reserva</td><td class="ok">PASS</td></tr>
+<tr><td>API-09</td><td>PUT sin token → 403</td><td class="ok">PASS</td></tr>
+<tr><td>API-10</td><td>GET inexistente → 404</td><td class="ok">PASS</td></tr>
+<tr><td>API-11</td><td>POST inválido</td><td class="ok">PASS</td></tr>
+</tbody>
+</table>
+</section>
+<section id="seguridad">
+<h2>5. Seguridad OWASP</h2>
+<table>
+<caption>Resultados DAST/SCA</caption>
+<thead><tr><th>Herramienta</th><th>Target</th><th>High</th><th>Medium</th><th>Low</th><th>Estado</th></tr></thead>
+<tbody>
+<tr><td>ZAP Baseline</td><td>www.saucedemo.com</td><td>0</td><td>4</td><td>5 (+11 info)</td><td class="ok">✅ CI run 45998268227</td></tr>
+<tr><td>ZAP API Scan</td><td>restful-booker.herokuapp.com/apidoc</td><td>0</td><td>2</td><td>84 (+7 info)</td><td class="ok">✅ informativo</td></tr>
+<tr><td>SCA npm audit</td><td>npm lockfile</td><td>0</td><td>6 moderate</td><td>0</td><td class="ok">✅ run 45998268227</td></tr>
+<tr><td>Dependency-Check</td><td>npm lockfile</td><td>—</td><td>—</td><td>—</td><td class="warn">SKIP justificado</td></tr>
+</tbody>
+</table>
+<p>Supresiones justificadas en <a href=".zap/rules.tsv"><code>.zap/rules.tsv</code></a> y detalle en <a href="docs/SEGURIDAD.md">docs/SEGURIDAD.md</a>.</p>
+</section>
+<section id="carga">
+<h2>6. Carga</h2>
+<table>
+<caption>JMeter — 10 hilos, rampa 10 s, 6 loops, 120 muestras</caption>
+<thead><tr><th>Métrica</th><th>Valor</th><th>Umbral</th><th>Estado</th></tr></thead>
+<tbody>
+<tr><td>Error rate</td><td>0,00 %</td><td>&lt; 1 %</td><td class="ok">✅</td></tr>
+<tr><td>p95 global</td><td>769,95 ms</td><td>&lt; 1500 ms</td><td class="ok">✅</td></tr>
+<tr><td>Mediana</td><td>141 ms</td><td>—</td><td>—</td></tr>
+<tr><td>Máximo</td><td>1467 ms</td><td>—</td><td>—</td></tr>
+<tr><td>Throughput</td><td>10,74 req/s</td><td>—</td><td>—</td></tr>
+</tbody>
+</table>
+</section>
+<section id="manual">
+<h2>7. QA manual</h2>
+<p>24 casos núcleo (10 WEB + 11 API + 1 CARGA + 2 SEGURIDAD) más SEC-03 como checklist complementario. <code>npm run manual:lint</code> valida secciones obligatorias e IDs sin huérfanos. La <a href="docs/manual/MATRIZ_MANUAL_AUTO.md">matriz</a> cruza 21 casos funcionales con sus tests automatizados.</p>
+</section>
+<section id="criterios">
+<h2>8. Criterios de aceptación</h2>
+<ul>
+<li class="ok">✅ Smoke 100 % (8/8).</li>
+<li class="ok">✅ Regresión 8/8.</li>
+<li class="ok">✅ API 11/11.</li>
+<li class="ok">✅ Carga error &lt; 1 % y p95 &lt; 1500 ms.</li>
+<li class="ok">✅ Seguridad 0 High en ZAP.</li>
+<li class="ok">✅ SCA npm audit: 0 High / 0 Critical; Dependency-Check SKIP justificado.</li>
+<li class="ok">✅ 0 flaky en 3 corridas consecutivas.</li>
+<li class="ok">✅ <code>manual:lint</code> verde.</li>
+</ul>
+</section>
+</main>
+<footer>Resultados construidos con Playwright JSON, JMeter statistics.json, ZAP y SCA descargados de CI. Generado desde artefactos reales.</footer>
+</body>
+</html>

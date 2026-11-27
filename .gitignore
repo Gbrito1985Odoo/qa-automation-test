@@ -7,6 +7,7 @@ load/results.jtl
 reports/history/
 reports/*.json
 reports/security/*.html
+reports/security/*.json
 docs/manual/evidencias/*.png
 *.log
 .DS_Store

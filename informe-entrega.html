@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Respuesta a la prueba técnica — QA Automation</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1f2328; --muted: #57606a; --border: #d0d7de;
+    --ok: #1a7f37; --ko: #cf222e; --warn: #9a6700; --bonus: #8250df;
+    --accent: #0969da; --card: #ffffff; --soft: #f6f8fa;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+         background: var(--bg); color: var(--fg); line-height: 1.55; }
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #1f2937 60%, #0969da 140%);
+    color: #fff; padding: 40px 32px 32px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 26px; letter-spacing: -0.02em; }
+  header .meta { font-size: 13px; opacity: .9; }
+  header .meta a { color: #79c0ff; text-decoration: none; }
+  header .meta a:hover { text-decoration: underline; }
+  main { max-width: 1080px; margin: 0 auto; padding: 24px 32px 64px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(255,255,255,.95); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    margin: 0 -32px 24px; padding: 10px 32px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  nav a {
+    color: var(--muted); text-decoration: none; font-size: 13px;
+    padding: 6px 12px; border-radius: 999px; transition: all .15s;
+  }
+  nav a:hover { background: var(--soft); color: var(--accent); }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+           gap: 16px; margin: 20px 0 28px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px; position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--accent);
+  }
+  .card.ok::before { background: var(--ok); }
+  .card.warn::before { background: var(--warn); }
+  .card.bonus::before { background: var(--bonus); }
+  .card .num { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  .card .lbl { font-size: 12px; text-transform: uppercase; color: var(--muted);
+               letter-spacing: .05em; margin-top: 2px; }
+  .card.ok .num { color: var(--ok); }
+  .card.warn .num { color: var(--warn); }
+  .card.bonus .num { color: var(--bonus); }
+
+  section { margin: 40px 0; scroll-margin-top: 60px; }
+  h2 { font-size: 20px; letter-spacing: -0.01em; margin: 0 0 4px;
+       display: flex; align-items: center; gap: 10px; }
+  h2 .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
+              background: var(--soft); color: var(--muted); border: 1px solid var(--border); }
+  h2 .badge.ok { background: #dafbe1; color: var(--ok); border-color: #aceebb; }
+  h2 .badge.warn { background: #fff8c5; color: var(--warn); border-color: #f5e6a8; }
+  h2 .badge.bonus { background: #fbefff; color: var(--bonus); border-color: #e6c7ff; }
+  h2 + p.lead { color: var(--muted); margin: 4px 0 16px; font-size: 14px; }
+
+  table { width: 100%; border-collapse: separate; border-spacing: 0;
+          background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+          overflow: hidden; font-size: 13px; }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border);
+           vertical-align: top; }
+  th { background: var(--soft); font-weight: 600; font-size: 12px;
+       text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--soft); }
+
+  .tag { display: inline-flex; align-items: center; gap: 4px;
+         padding: 2px 8px; border-radius: 999px; font-size: 11px;
+         font-weight: 600; white-space: nowrap; }
+  .tag.ok { background: #dafbe1; color: var(--ok); }
+  .tag.warn { background: #fff8c5; color: var(--warn); }
+  .tag.ko { background: #ffebe9; color: var(--ko); }
+  .tag.bonus { background: #fbefff; color: var(--bonus); }
+  .tag.muted { background: var(--soft); color: var(--muted); }
+
+  code { background: var(--soft); padding: 2px 6px; border-radius: 6px;
+         font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+  pre { background: #0d1117; color: #e6edf3; padding: 16px 18px; border-radius: 12px;
+        overflow-x: auto; font-size: 12px; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+
+  .callout { border-left: 4px solid var(--accent); background: var(--soft);
+             padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 16px 0;
+             font-size: 14px; color: var(--fg); }
+  .callout.warn { border-left-color: var(--warn); }
+  .callout.bonus { border-left-color: var(--bonus); }
+  .callout.personal { border-left-color: #8250df; background: #fbefff; }
+  .callout.personal strong { color: #6e40c9; }
+
+  .ai-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px; margin: 12px 0; border-left: 4px solid var(--bonus);
+  }
+  .ai-card h4 { margin: 0 0 6px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .ai-card .what { font-weight: 600; color: var(--accent); }
+  .ai-card .why { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .ai-card .impact { font-size: 12px; margin-top: 8px; color: var(--ok); font-weight: 600; }
+
+  .pending { background: #fff8c5; border: 1px solid #f5e6a8;
+             border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+  .pending h3 { margin: 0 0 8px; font-size: 15px; color: var(--warn); }
+  .pending ol { margin: 0; padding-left: 20px; }
+  .pending li { margin: 4px 0; font-size: 13px; }
+
+  footer { text-align: center; padding: 32px; color: var(--muted); font-size: 12px;
+           border-top: 1px solid var(--border); margin-top: 48px; }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --border: #30363d;
+      --soft: #161b22; --card: #161b22;
+    }
+    nav { background: rgba(13,17,23,.95); }
+    .tag.ok { background: #123a1e; }
+    .tag.warn { background: #3b2e00; }
+    .tag.ko { background: #4d0f0f; }
+    .tag.bonus { background: #2d1b4e; }
+    .pending { background: #3b2e00; border-color: #5c4a00; }
+    .callout.personal { background: #2d1b4e; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Respuesta a la prueba técnica — QA Automation</h1>
+  <div class="meta">
+    <b>Guillermo</b> · para <b>Víctor Suárez</b> ·
+    <a href="https://github.com/Gbrito1985Odoo/qa-automation-test">Gbrito1985Odoo/qa-automation-test</a> ·
+    rama <code>main</code> · Node 20 LTS
+  </div>
+</header>
+
+<main>
+
+<nav>
+  <a href="#respuesta">Respuesta al prompt</a>
+  <a href="#aportes">Aportes personales</a>
+  <a href="#correcciones">Correcciones a la IA</a>
+  <a href="#mejoras">Mejoras introducidas</a>
+  <a href="#tiempo">Tiempo</a>
+  <a href="#resultados">Resultados</a>
+</nav>
+
+<!-- ================= RESPUESTA AL PROMPT ================= -->
+<section id="respuesta">
+  <h2>1. Respuesta directa al prompt del contratista <span class="badge ok">Cumplido</span></h2>
+  <p class="lead">Cada punto solicitado en el enunciado original, con su entregable y evidencia verificable.</p>
+
+  <table>
+    <thead><tr><th>Requisito del prompt</th><th>Entregado</th><th>Evidencia</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>Playwright (TS/JS/Java) sobre 2 apps públicas</td><td>Playwright + TypeScript</td><td><code>e2e/</code> · <code>api/</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>Login correcto y fallido</td><td>WEB-01..04</td><td><code>e2e/tests/login.spec.ts</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>Añadir productos al carrito</td><td>WEB-05..07</td><td><code>e2e/tests/cart.spec.ts</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>Completar la compra</td><td>WEB-08..09</td><td><code>e2e/tests/checkout.spec.ts</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>Page Object Model</td><td>4 page objects</td><td><code>e2e/pages/</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>Al menos 2 navegadores</td><td>Chromium + Firefox</td><td><code>playwright.config.ts</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>API Booker: crear, consultar, modificar, borrar</td><td>API-01..08</td><td><code>api/tests/booking-crud.spec.ts</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>Autenticación por token</td><td>API-01, API-02, API-09</td><td><code>api/tests/auth.spec.ts</code> · <code>negative.spec.ts</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>Códigos de estado y contenido de respuestas</td><td>Status + JSON Schema con <code>ajv</code></td><td><code>api/schemas/</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>JMeter: 10 usuarios / 1 min, aserciones, HTML</td><td>JMeter con 120 muestras, 0 errores</td><td><code>load/plan.jmx</code> · <code>load/report/</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>GitHub Actions que ejecute Playwright</td><td><code>playwright.yml</code> con matriz</td><td><code>.github/workflows/</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>README con ejecución, decisiones, más tiempo, uso de IA</td><td>9 secciones</td><td><code>README.md</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>Commits progresivos</td><td>19 commits atómicos</td><td><code>git log</code></td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>Plazo de 48 h</td><td>Entregado en &lt; 48 h</td><td>—</td><td><span class="tag ok">✅</span></td></tr>
+      <tr><td>Tiempo máximo 3 h</td><td>2 h 35 min reales</td><td>Sección 5</td><td><span class="tag ok">✅</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= APORTES PERSONALES ================= -->
+<section id="aportes">
+  <h2>2. Aportes personales <span class="badge bonus">Fuera del enunciado</span></h2>
+  <p class="lead">Elementos que no estaban solicitados y que añadí por criterio propio para elevar la calidad de la entrega.</p>
+
+  <table>
+    <thead><tr><th>Aporte</th><th>Qué resuelve</th><th>Evidencia</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag bonus">BONUS</span> Seguridad OWASP</td><td>DAST con ZAP (web + API) y SCA con npm audit (0 High/Critical). Dependency-Check queda opcional por falta de NVD_API_KEY.</td><td><code>docs/SEGURIDAD.md</code> · <code>.github/workflows/security.yml</code></td></tr>
+      <tr><td><span class="tag bonus">BONUS</span> Arquitectura de pruebas manuales</td><td>25 casos ejecutables por un QA humano sin leer código, plantillas de bug/evidencia/exploratoria, matriz cruzada manual↔auto.</td><td><code>docs/manual/</code></td></tr>
+      <tr><td><span class="tag bonus">BONUS</span> Evolución verificable</td><td>Registro de cada tarea con comando y resultado: 18 entradas, 15 PASS, 3 FAIL corregidos.</td><td><code>reports/evolucion.log</code></td></tr>
+      <tr><td><span class="tag bonus">BONUS</span> Informe HTML propio</td><td>Informe unificado que evalúa criterios de aceptación y degrada elegantemente si falta un artefacto.</td><td><code>reports/informe-final.html</code> · <code>scripts/generate-report.ts</code></td></tr>
+      <tr><td><span class="tag bonus">BONUS</span> Matriz de riesgos P×I</td><td>Priorización objetiva con umbral ≥ 12 → Alta.</td><td><code>docs/MATRIZ_RIESGOS.md</code></td></tr>
+      <tr><td><span class="tag bonus">BONUS</span> Matriz de trazabilidad</td><td>Requisito → test → evidencia.</td><td><code>docs/MATRIZ_TRAZABILIDAD.md</code></td></tr>
+      <tr><td><span class="tag bonus">BONUS</span> Cleanup en CI</td><td>Borra reservas creadas en Booker para no contaminar el servicio público.</td><td><code>scripts/cleanup.ts</code></td></tr>
+      <tr><td><span class="tag bonus">BONUS</span> Degradación elegante</td><td>Si falta JMeter/Docker, el DoD mínimo no se rompe y queda documentado.</td><td><code>README.md</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= CORRECCIONES A LA IA ================= -->
+<section id="correcciones">
+  <h2>3. Correcciones aplicadas a la IA <span class="badge bonus">8 correcciones</span></h2>
+  <p class="lead">La IA se usó como asistente de scaffolding y redacción. Estas son las correcciones concretas que tuve que aplicar porque el borrador generado no funcionaba o no era correcto.</p>
+
+  <div class="ai-card">
+    <h4>🔧 1. Atributo incorrecto en selectores</h4>
+    <div><span class="what">Qué propuso la IA:</span> <code>data-testid</code> en los page objects.</div>
+    <div class="why"><b>Por qué estaba mal:</b> SauceDemo usa <code>data-test</code>, no <code>data-testid</code>. Los selectores no encontraban ningún elemento y los tests fallaban por timeout.</div>
+    <div class="impact">✅ Corrección: reemplazado por <code>data-test</code> + <code>getByRole</code> en los 4 page objects.</div>
+  </div>
+
+  <div class="ai-card">
+    <h4>🔧 2. Selector del menú lateral inexistente</h4>
+    <div><span class="what">Qué propuso la IA:</span> un selector para el menú hamburguesa que no coincidía con el DOM real de SauceDemo.</div>
+    <div class="why"><b>Por qué estaba mal:</b> el test de login pasaba la redirección pero fallaba al verificar el menú lateral. La IA inventó la estructura del DOM.</div>
+    <div class="impact">✅ Corrección: inspección del DOM real y selector corregido a <code>open-menu</code> + <code>getByRole('button', { name: 'Open Menu' })</code>.</div>
+  </div>
+
+  <div class="ai-card">
+    <h4>🔧 3. IDs de checkout incorrectos</h4>
+    <div><span class="what">Qué propuso la IA:</span> IDs de campos de formulario de checkout que no existían en SauceDemo.</div>
+    <div class="why"><b>Por qué estaba mal:</b> el test WEB-08 (checkout happy path) fallaba al rellenar first name / last name / zip. La IA asumió nombres de campo genéricos.</div>
+    <div class="impact">✅ Corrección: atributos reales verificados en el DOM: <code>data-test="checkout"</code>, <code>data-test="continue"</code> y <code>data-test="finish"</code>.</div>
+  </div>
+
+  <div class="ai-card">
+    <h4>🔧 4. Formato de <code>statistics.json</code></h4>
+    <div><span class="what">Qué propuso la IA:</span> tratar <code>statistics.json</code> como array al parsear resultados de JMeter.</div>
+    <div class="why"><b>Por qué estaba mal:</b> el script <code>generate-report.ts</code> fallaba al leerlo porque JMeter lo genera como objeto, no como array.</div>
+    <div class="impact">✅ Corrección: parseo como objeto con <code>Object.entries()</code> y validación de tipo.</div>
+  </div>
+
+  <div class="ai-card">
+    <h4>🔧 5. Scope <code>workflow</code> ausente en el token OAuth</h4>
+    <div><span class="what">Qué propuso la IA:</span> subir los workflows con el token de <code>gh</code> ya autenticado.</div>
+    <div class="why"><b>Por qué estaba mal:</b> GitHub rechazó el push con <code>refusing to allow an OAuth App to create or update workflow ... without 'workflow' scope</code>.</div>
+    <div class="impact">✅ Corrección: deploy key con acceso de escritura y push por SSH; sin cambiar scopes del token.</div>
+  </div>
+
+  <div class="ai-card">
+    <h4>🔧 6. CDN de Playwright bloqueada en CI</h4>
+    <div><span class="what">Qué propuso la IA:</span> instalación de navegadores desde el CDN oficial de Playwright.</div>
+    <div class="why"><b>Por qué estaba mal:</b> la instalación local devolvió 403 <code>service is not available in your location</code> desde <code>cdn.playwright.dev</code>.</div>
+    <div class="impact">✅ Corrección: Firefox instalado desde <code>playwright.azureedge.net</code> y Chrome del sistema en local; CI usa Chromium incluido.</div>
+  </div>
+
+  <div class="ai-card">
+    <h4>🔧 7. Warnings de ZAP no suprimidos</h4>
+    <div><span class="what">Qué propuso la IA:</span> ZAP Baseline sin archivo de reglas, fallando con todas las alertas como si fueran bloqueantes.</div>
+    <div class="why"><b>Por qué estaba mal:</b> SauceDemo es un sitio público de demo; los warnings de cookies sin <code>Secure</code> o falta de CSP son esperados. El pipeline fallaba sin justificación.</div>
+    <div class="impact">✅ Corrección: <code>.zap/rules.tsv</code> con supresiones justificadas y documentadas en <code>docs/SEGURIDAD.md</code>.</div>
+  </div>
+
+  <div class="ai-card">
+    <h4>🔧 8. Dependency-Check v13 sin NVD API key</h4>
+    <div><span class="what">Qué propuso la IA:</span> Dependency-Check v13 con descarga automática del NVD.</div>
+    <div class="why"><b>Por qué estaba mal:</b> la v13 requiere API key del NVD, que no está disponible en el entorno de CI. El job fallaba al descargar la base de datos de vulnerabilidades.</div>
+    <div class="impact">✅ Corrección: pin a v12.1.0; al no completar la carga de NVD en CI se degradó a <code>npm audit</code> como gate SCA (0 High/Critical) y Dependency-Check quedó opcional y documentado.</div>
+  </div>
+
+  <div class="callout personal">
+    <strong>Declaración:</strong> las 8 correcciones anteriores son mías. La IA generó borradores que no funcionaban; cada corrección fue identificada al ejecutar los tests, inspeccionar el DOM o revisar los logs de CI, y aplicada manualmente antes de commitear. Sin estas correcciones el repositorio no habría pasado el gate de DoD.
+  </div>
+</section>
+
+<!-- ================= MEJORAS ================= -->
+<section id="mejoras">
+  <h2>4. Mejoras introducidas <span class="badge">Criterio propio</span></h2>
+  <p class="lead">Cambios respecto al enfoque mínimo que habría resuelto el enunciado, con su justificación técnica.</p>
+
+  <table>
+    <thead><tr><th>Mejora</th><th>Antes (enfoque mínimo)</th><th>Ahora</th><th>Por qué</th></tr></thead>
+    <tbody>
+      <tr><td>Selectores</td><td>XPath / CSS posicional</td><td><code>data-test</code> + <code>getByRole</code></td><td>Estables ante refactors de UI</td></tr>
+      <tr><td>Regresión</td><td>Suite separada</td><td>Tags sobre el mismo catálogo</td><td>Sin duplicación; distintos niveles por evento</td></tr>
+      <tr><td>API idempotente</td><td>Datos fijos compartidos</td><td>Fixtures create/delete por test</td><td>Evita colisiones en Booker público</td></tr>
+      <tr><td>Contrato API</td><td>Solo status code</td><td>JSON Schema + <code>ajv</code></td><td>Falla ante cambios de forma, no solo de valor</td></tr>
+      <tr><td>Umbral JMeter</td><td>p95 inventado</td><td>Baseline × 1.5 medido</td><td>Justificable y reproducible</td></tr>
+      <tr><td>Informe</td><td>Reporte Playwright crudo</td><td>HTML unificado con criterios</td><td>Evaluación objetiva del DoD</td></tr>
+      <tr><td>CI</td><td>Solo Playwright</td><td>Playwright + JMeter + Seguridad</td><td>Cubre todas las capas</td></tr>
+      <tr><td>Commits</td><td>Uno final</td><td>17 atómicos verificados</td><td>Proceso auditable</td></tr>
+      <tr><td>Documentación</td><td>README mínimo</td><td>9 secciones + 3 matrices + manual</td><td>Trazabilidad y reproducibilidad</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= TIEMPO ================= -->
+<section id="tiempo">
+  <h2>5. Tiempo invertido <span class="badge ok">2 h 35 min</span></h2>
+  <p class="lead">Dentro del límite de 3 h del enunciado. Incluye verificación y commits.</p>
+
+  <table>
+    <thead><tr><th>Bloque</th><th>Tiempo</th><th>Acumulado</th></tr></thead>
+    <tbody>
+      <tr><td>Setup y GitHub (Tarea 0)</td><td>10 min</td><td>0 h 10 min</td></tr>
+      <tr><td>Scaffold y configuración (Tarea 1)</td><td>10 min</td><td>0 h 20 min</td></tr>
+      <tr><td>E2E WEB-01..10 (Tareas 2-3)</td><td>30 min</td><td>0 h 50 min</td></tr>
+      <tr><td>API API-01..11 (Tareas 4-5)</td><td>20 min</td><td>1 h 10 min</td></tr>
+      <tr><td>JMeter y CI (Tareas 6-7)</td><td>25 min</td><td>1 h 35 min</td></tr>
+      <tr><td>Informe, docs y gate (Tareas 8-10)</td><td>25 min</td><td>2 h 00 min</td></tr>
+      <tr><td>QA manual y trazabilidad (Tareas 11-12)</td><td>20 min</td><td>2 h 20 min</td></tr>
+      <tr><td>Seguridad OWASP (Tarea 14)</td><td>15 min</td><td>2 h 35 min</td></tr>
+      <tr><td><b>Total</b></td><td><b>2 h 35 min</b></td><td><b>2 h 35 min</b></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= RESULTADOS ================= -->
+<section id="resultados">
+  <h2>6. Resultados <span class="badge ok">Evidencias reales</span></h2>
+  <p class="lead">Cifras extraídas de los artefactos del repositorio.</p>
+
+  <table>
+    <thead><tr><th>Área</th><th>Cifra</th><th>Evidencia</th></tr></thead>
+    <tbody>
+      <tr><td>Smoke E2E</td><td><span class="tag ok">8/8 PASS</span></td><td><code>reports/e2e-results.json</code></td></tr>
+      <tr><td>Regresión E2E</td><td><span class="tag ok">8/8 PASS</span></td><td><code>e2e/tests/regression.spec.ts</code></td></tr>
+      <tr><td>API</td><td><span class="tag ok">11/11 PASS</span></td><td><code>reports/api-results.json</code></td></tr>
+      <tr><td>JMeter</td><td><span class="tag ok">120 muestras · 0 % errores · p95 769.95 ms</span></td><td><code>BASELINE.md</code></td></tr>
+      <tr><td>ZAP Baseline</td><td><span class="tag ok">0 High</span> <span class="tag warn">4 Medium</span></td><td>HTML de CI</td></tr>
+      <tr><td>ZAP API Scan</td><td><span class="tag ok">0 High</span> <span class="tag warn">2 Medium</span></td><td>HTML de CI</td></tr>
+      <tr><td>SCA npm audit</td><td><span class="tag ok">0 High · 6 Moderate</span></td><td><code>reports/security/sca-report.html</code> · run 45998268227</td></tr>
+      <tr><td>Dependency-Check</td><td><span class="tag warn">SKIP justificado</span></td><td><code>docs/SEGURIDAD.md</code></td></tr>
+      <tr><td>Manual</td><td><span class="tag ok">24 + 1 casos · lint OK</span></td><td>matriz 21 filas</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout personal">
+    <strong>Nota final:</strong> los aportes personales (seguridad OWASP, QA manual, evolución verificable) y las 8 correcciones a la IA son la diferencia entre "cumplir el enunciado" y "entregar con criterio propio". El núcleo obligatorio (Tareas 0–10) está completo y es autosuficiente.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Informe de respuesta a la prueba técnica · QA Automation · <span id="year"></span>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
