@@ -13,6 +13,7 @@
     "test:api": "playwright test --config api/playwright.config.ts",
     "jmeter:load": "jmeter -n -t load/plan.jmx -l load/results.jtl -e -o load/report",
     "report:html": "ts-node scripts/generate-report.ts",
+    "cleanup": "ts-node scripts/cleanup.ts",
     "security:check": "ts-node scripts/security-check.ts",
     "manual:lint": "ts-node scripts/manual-lint.ts"
   },
