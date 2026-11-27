@@ -152,6 +152,7 @@
   <a href="#mejoras">Mejoras introducidas</a>
   <a href="#tiempo">Tiempo</a>
   <a href="#resultados">Resultados</a>
+  <a href="#repo">Repo y CI</a>
 </nav>
 
 <!-- ================= RESPUESTA AL PROMPT ================= -->
@@ -332,6 +333,25 @@
   <div class="callout personal">
     <strong>Nota final:</strong> los aportes personales (seguridad OWASP, QA manual, evolución verificable) y las 8 correcciones a la IA son la diferencia entre "cumplir el enunciado" y "entregar con criterio propio". El núcleo obligatorio (Tareas 0–10) está completo y es autosuficiente.
   </div>
+</section>
+
+<!-- ================= REPO Y CI ================= -->
+<section id="repo">
+  <h2>7. Repositorio, CI y trazabilidad <span class="badge ok">Verificable</span></h2>
+  <p class="lead">Dirección exacta del repositorio y enlaces a toda la evidencia generada.</p>
+
+  <table>
+    <thead><tr><th>Dato</th><th>Valor</th><th>Evidencia</th></tr></thead>
+    <tbody>
+      <tr><td>Repositorio público</td><td><a href="https://github.com/Gbrito1985Odoo/qa-automation-test">https://github.com/Gbrito1985Odoo/qa-automation-test</a></td><td><code>git remote -v</code></td></tr>
+      <tr><td>Clone</td><td><code>git clone https://github.com/Gbrito1985Odoo/qa-automation-test.git</code></td><td><code>README.md</code></td></tr>
+      <tr><td>Rama / entorno</td><td><code>main</code> · Node 20 LTS · 19 commits · 90 archivos</td><td><code>.nvmrc</code> · <code>git log</code></td></tr>
+      <tr><td>Evolución</td><td>18 entradas: 15 PASS y 3 FAIL corregidos</td><td><code>reports/evolucion.log</code></td></tr>
+      <tr><td>CI final</td><td>Playwright <code>45999479447</code> ✅ · Security <code>45999479412</code> ✅ · JMeter <code>45987216383</code> ✅</td><td><code>.github/workflows/</code></td></tr>
+      <tr><td>Informes</td><td><code>reports/informe-final.html</code> · <code>informe-entrega.html</code> · <code>informe-resultados.html</code></td><td>raíz del repo</td></tr>
+      <tr><td>Pendiente humano</td><td>6 dependencias Moderate, <code>NVD_API_KEY</code> para reactivar Dependency-Check, vigilar DOM/API y capturas manuales</td><td><code>docs/SEGURIDAD.md</code></td></tr>
+    </tbody>
+  </table>
 </section>
 
 </main>

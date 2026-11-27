@@ -52,8 +52,9 @@ HTML5 autocontenido, mismo estilo y `<nav>` con anclas. Secciones:
 4. Accesibilidad: `lang="es"`, contraste AA, `<caption>`, `aria-label` en nav.
 5. Responsive, dark mode automático.
 6. Sin dependencias externas: CSS/JS inline.
-7. Escribe `informe-entrega.html` e `informe-resultados.html` en la raíz.
-8. Al terminar imprime:
+7. Incluye en ambos HTML la dirección completa del repo (`https://github.com/Gbrito1985Odoo/qa-automation-test`), el clone con `.git`, commits, archivos, evolución, CI final y enlaces a todas las evidencias; no omitas información verificable.
+8. Escribe `informe-entrega.html` e `informe-resultados.html` en la raíz.
+9. Al terminar imprime:
 ```
 ✅ Informes generados
 - informe-entrega.html    (<N> KB · <S> secciones · <T> tablas)

@@ -5,143 +5,671 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Informe de resultados — QA Automation</title>
 <style>
-:root{color-scheme:light dark;--bg:#fff;--fg:#1f2328;--mut:#59636e;--bdr:#d1d9e0;--acc:#0969da;--ok:#1a7f37;--warn:#9a6700;--bad:#cf222e;--card:#f6f8fa}
-@media(prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--mut:#9198a1;--bdr:#30363d;--acc:#4493f8;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--card:#161b22}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
-header,nav,main{max-width:1100px;margin:auto;padding:1rem}nav{border-bottom:1px solid var(--bdr);display:flex;flex-wrap:wrap;gap:.8rem}a{color:var(--acc)}
-h1{font-size:2rem}h2{margin-top:2.5rem;border-bottom:1px solid var(--bdr);padding-bottom:.3rem}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem}.card{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:1rem}
-.card span{display:block;color:var(--mut);font-size:.85rem}.card strong{font-size:1.3rem}
-table{border-collapse:collapse;width:100%;display:block;overflow-x:auto}caption{text-align:left;font-weight:600;padding:.5rem 0}
-th,td{border:1px solid var(--bdr);padding:.5rem;text-align:left;vertical-align:top}th{background:var(--card)}
-.ok{color:var(--ok);font-weight:600}.warn{color:var(--warn);font-weight:600}.bad{color:var(--bad);font-weight:600}
-code{background:var(--card);padding:.1rem .35rem;border-radius:4px}.tag{font-size:.75rem;border:1px solid var(--bdr);border-radius:999px;padding:.1rem .5rem;color:var(--mut)}
-footer{border-top:1px solid var(--bdr);margin-top:3rem;padding:1rem;color:var(--mut)}
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --bg-soft: #f6f8fa;
+    --fg: #1f2328;
+    --mut: #59636e;
+    --bdr: #d1d9e0;
+    --acc: #0969da;
+    --acc-soft: #ddf4ff;
+    --ok: #1a7f37;
+    --ok-soft: #dafbe1;
+    --warn: #9a6700;
+    --warn-soft: #fff8c5;
+    --bad: #cf222e;
+    --bad-soft: #ffebe9;
+    --card: #ffffff;
+    --shadow: 0 1px 3px rgba(31, 35, 40, 0.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --bg-soft: #161b22;
+      --fg: #e6edf3;
+      --mut: #9198a1;
+      --bdr: #30363d;
+      --acc: #4493f8;
+      --acc-soft: #0c2d6b;
+      --ok: #3fb950;
+      --ok-soft: #123a1e;
+      --warn: #d29922;
+      --warn-soft: #3b2e00;
+      --bad: #f85149;
+      --bad-soft: #4d0f0f;
+      --card: #161b22;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #1f2937 60%, #0969da 140%);
+    color: #fff;
+    padding: 48px 24px 40px;
+  }
+  header .wrap { max-width: 1100px; margin: auto; }
+  header h1 {
+    font-size: 32px;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  header .subtitle {
+    font-size: 15px;
+    opacity: 0.92;
+    margin: 0 0 16px;
+    max-width: 720px;
+  }
+  header .meta {
+    font-size: 13px;
+    opacity: 0.85;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+  }
+  header .meta a { color: #79c0ff; text-decoration: none; }
+  header .meta a:hover { text-decoration: underline; }
+  header .meta .tag-final {
+    background: rgba(63, 185, 80, 0.2);
+    color: #7ee787;
+    border: 1px solid rgba(63, 185, 80, 0.4);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  /* Nav sticky */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--bdr);
+  }
+  @media (prefers-color-scheme: dark) {
+    nav { background: rgba(13, 17, 23, 0.95); }
+  }
+  nav .wrap {
+    max-width: 1100px;
+    margin: auto;
+    padding: 10px 24px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    overflow-x: auto;
+  }
+  nav a {
+    color: var(--mut);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  nav a:hover {
+    background: var(--bg-soft);
+    color: var(--acc);
+  }
+
+  /* Main */
+  main { max-width: 1100px; margin: auto; padding: 0 24px 64px; }
+
+  section { margin: 48px 0; scroll-margin-top: 70px; }
+  section h2 {
+    font-size: 22px;
+    margin: 0 0 4px;
+    letter-spacing: -0.015em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  section h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--acc-soft);
+    color: var(--acc);
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  section > p.lead {
+    color: var(--mut);
+    font-size: 14px;
+    margin: 4px 0 20px;
+  }
+
+  /* Cards KPI */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 20px 0 8px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--bdr);
+    border-radius: 12px;
+    padding: 20px 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(31, 35, 40, 0.08);
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--acc);
+  }
+  .card.ok::before { background: var(--ok); }
+  .card.warn::before { background: var(--warn); }
+  .card.bad::before { background: var(--bad); }
+  .card .lbl {
+    display: block;
+    color: var(--mut);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .card .val {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .card .note {
+    font-size: 12px;
+    color: var(--mut);
+    margin-top: 4px;
+  }
+  .card.ok .val { color: var(--ok); }
+  .card.warn .val { color: var(--warn); }
+  .card.bad .val { color: var(--bad); }
+
+  /* Tablas */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--card);
+    border: 1px solid var(--bdr);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
+    box-shadow: var(--shadow);
+  }
+  caption {
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--mut);
+    padding: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--bdr);
+    vertical-align: top;
+  }
+  th {
+    background: var(--bg-soft);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--mut);
+  }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--bg-soft); }
+  td code {
+    background: var(--bg-soft);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+  }
+
+  /* Tags de estado */
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .status.ok { background: var(--ok-soft); color: var(--ok); }
+  .status.warn { background: var(--warn-soft); color: var(--warn); }
+  .status.bad { background: var(--bad-soft); color: var(--bad); }
+  .status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* Badge de tags */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--bg-soft);
+    color: var(--mut);
+    border: 1px solid var(--bdr);
+    font-family: ui-monospace, monospace;
+    margin-right: 4px;
+  }
+  .tag.smoke { background: var(--acc-soft); color: var(--acc); border-color: transparent; }
+  .tag.critical { background: var(--bad-soft); color: var(--bad); border-color: transparent; }
+  .tag.regression { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+
+  /* Criterios checklist */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 10px;
+  }
+  .checklist li {
+    background: var(--card);
+    border: 1px solid var(--bdr);
+    border-left: 4px solid var(--ok);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow);
+  }
+  .checklist li::before {
+    content: "✓";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: var(--ok-soft);
+    color: var(--ok);
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  /* Callout */
+  .callout {
+    border-left: 4px solid var(--acc);
+    background: var(--bg-soft);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 20px 0;
+    font-size: 14px;
+    color: var(--fg);
+  }
+  .callout.warn { border-left-color: var(--warn); }
+  .callout.ok { border-left-color: var(--ok); }
+  .callout code {
+    background: var(--card);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  /* Footer */
+  footer {
+    max-width: 1100px;
+    margin: 64px auto 0;
+    padding: 24px;
+    border-top: 1px solid var(--bdr);
+    color: var(--mut);
+    font-size: 13px;
+    text-align: center;
+  }
+  footer .badge {
+    display: inline-block;
+    background: var(--bg-soft);
+    border: 1px solid var(--bdr);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    header { padding: 32px 16px; }
+    header h1 { font-size: 24px; }
+    main { padding: 0 16px 48px; }
+    nav .wrap { padding: 8px 16px; }
+    th, td { padding: 10px 12px; font-size: 13px; }
+    .card .val { font-size: 20px; }
+  }
 </style>
 </head>
 <body>
+
 <header>
-<h1>Informe de resultados — QA Automation</h1>
-<p><span class="tag">FINAL</span> Cifras tomadas de artefactos reales y ejecuciones verificadas.</p>
-<p>Repo: <a href="https://github.com/Gbrito1985Odoo/qa-automation-test">Gbrito1985Odoo/qa-automation-test</a> · rama <code>main</code> · fecha 2026-11-27.</p>
+  <div class="wrap">
+    <h1>Informe de resultados — QA Automation</h1>
+    <p class="subtitle">Cifras tomadas de artefactos reales y ejecuciones verificadas. Sin invención: lo pendiente se marca como tal.</p>
+    <div class="meta">
+      <span class="tag-final">● FINAL</span>
+      <span>Repo: <a href="https://github.com/Gbrito1985Odoo/qa-automation-test">Gbrito1985Odoo/qa-automation-test</a></span>
+      <span>rama <code style="background:rgba(255,255,255,.15);color:#fff;padding:1px 6px;border-radius:4px;">main</code></span>
+      <span>2026-11-27</span>
+    </div>
+  </div>
 </header>
+
 <nav aria-label="Navegación">
-<a href="#resumen">Resumen</a><a href="#alcance">Alcance</a><a href="#e2e">E2E</a><a href="#api">API</a><a href="#seguridad">Seguridad</a><a href="#carga">Carga</a><a href="#manual">Manual</a><a href="#criterios">Criterios</a>
+  <div class="wrap">
+    <a href="#resumen">Resumen</a>
+    <a href="#alcance">Alcance</a>
+    <a href="#e2e">E2E</a>
+    <a href="#api">API</a>
+    <a href="#seguridad">Seguridad</a>
+    <a href="#carga">Carga</a>
+    <a href="#manual">Manual</a>
+    <a href="#criterios">Criterios</a>
+    <a href="#repo">Repo y CI</a>
+  </div>
 </nav>
+
 <main>
+
+<!-- ============ RESUMEN ============ -->
 <section id="resumen">
-<h2>1. Resumen numérico</h2>
-<div class="cards">
-<div class="card"><span>E2E smoke</span><strong>8 PASS / 0 FAIL</strong></div>
-<div class="card"><span>E2E regresión</span><strong>8 PASS / 0 FAIL</strong></div>
-<div class="card"><span>API</span><strong>11 PASS / 0 FAIL</strong></div>
-<div class="card"><span>JMeter</span><strong>0,00 % errores</strong></div>
-<div class="card"><span>JMeter p95</span><strong>769,95 ms</strong></div>
-<div class="card"><span>Seguridad</span><strong class="ok">0 High / 0 High-Critical SCA</strong></div>
-<div class="card"><span>Casos manuales</span><strong>24 núcleo + 1 extra</strong></div>
-<div class="card"><span>Flaky detectado</span><strong>0 en 3 corridas</strong></div>
-</div>
+  <h2><span class="num">1</span> Resumen numérico</h2>
+  <p class="lead">Indicadores clave de la corrida final. Todos los valores provienen de artefactos versionados y runs de CI verificables.</p>
+
+  <div class="cards">
+    <div class="card ok">
+      <span class="lbl">E2E smoke</span>
+      <span class="val">8/8</span>
+      <span class="note">0 fallos</span>
+    </div>
+    <div class="card ok">
+      <span class="lbl">E2E regresión</span>
+      <span class="val">8/8</span>
+      <span class="note">0 fallos</span>
+    </div>
+    <div class="card ok">
+      <span class="lbl">API</span>
+      <span class="val">11/11</span>
+      <span class="note">0 fallos</span>
+    </div>
+    <div class="card ok">
+      <span class="lbl">JMeter error rate</span>
+      <span class="val">0,00 %</span>
+      <span class="note">120 muestras</span>
+    </div>
+    <div class="card ok">
+      <span class="lbl">JMeter p95</span>
+      <span class="val">769,95 ms</span>
+      <span class="note">umbral &lt; 1500 ms</span>
+    </div>
+    <div class="card ok">
+      <span class="lbl">Seguridad</span>
+      <span class="val">0 High</span>
+      <span class="note">ZAP + SCA</span>
+    </div>
+    <div class="card ok">
+      <span class="lbl">Casos manuales</span>
+      <span class="val">24+1</span>
+      <span class="note">lint OK</span>
+    </div>
+    <div class="card ok">
+      <span class="lbl">Flaky</span>
+      <span class="val">0</span>
+      <span class="note">en 3 corridas</span>
+    </div>
+  </div>
 </section>
+
+<!-- ============ ALCANCE ============ -->
 <section id="alcance">
-<h2>2. Alcance y entorno</h2>
-<table>
-<caption>Qué se probó</caption>
-<thead><tr><th>Capa</th><th>Objetivo</th><th>Herramienta</th><th>Entorno</th></tr></thead>
-<tbody>
-<tr><td>Web</td><td>SauceDemo login/carrito/checkout</td><td>Playwright + TS</td><td>Chromium + Firefox</td></tr>
-<tr><td>API</td><td>Restful Booker auth + CRUD + negativos</td><td>Playwright APIRequestContext + ajv</td><td>HTTPS público</td></tr>
-<tr><td>Carga</td><td>GET /booking y POST /auth</td><td>JMeter 5.6.3</td><td>10 hilos / 6 loops</td></tr>
-<tr><td>Seguridad</td><td>OWASP Web/API + dependencias</td><td>ZAP + Dependency-Check</td><td>GitHub Actions</td></tr>
-<tr><td>Manual</td><td>10 WEB + 11 API + 1 CARGA + 3 SEGURIDAD</td><td>Casos y plantillas Markdown</td><td>Sin leer código</td></tr>
-</tbody>
-</table>
+  <h2><span class="num">2</span> Alcance y entorno</h2>
+  <p class="lead">Qué se probó, con qué herramienta y en qué entorno.</p>
+
+  <table>
+    <caption>Mapa de cobertura por capa</caption>
+    <thead>
+      <tr><th>Capa</th><th>Objetivo</th><th>Herramienta</th><th>Entorno</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Web</b></td><td>SauceDemo login / carrito / checkout</td><td>Playwright + TS</td><td>Chromium + Firefox</td></tr>
+      <tr><td><b>API</b></td><td>Restful Booker auth + CRUD + negativos</td><td>Playwright APIRequestContext + <code>ajv</code></td><td>HTTPS público</td></tr>
+      <tr><td><b>Carga</b></td><td>GET /booking y POST /auth</td><td>JMeter 5.6.3</td><td>10 hilos / 6 loops</td></tr>
+      <tr><td><b>Seguridad</b></td><td>OWASP Web/API + dependencias</td><td>ZAP + Dependency-Check</td><td>GitHub Actions</td></tr>
+      <tr><td><b>Manual</b></td><td>10 WEB + 11 API + 1 CARGA + 3 SEGURIDAD</td><td>Casos y plantillas Markdown</td><td>Sin leer código</td></tr>
+    </tbody>
+  </table>
 </section>
+
+<!-- ============ E2E ============ -->
 <section id="e2e">
-<h2>3. E2E — detalle</h2>
-<table>
-<caption>Casos automatizados (10 × 2 navegadores)</caption>
-<thead><tr><th>ID</th><th>Caso</th><th>Tags</th><th>Estado</th></tr></thead>
-<tbody>
-<tr><td>WEB-01</td><td>Login correcto</td><td>@smoke @critical</td><td class="ok">PASS</td></tr>
-<tr><td>WEB-02</td><td>Login bloqueado</td><td>@smoke</td><td class="ok">PASS</td></tr>
-<tr><td>WEB-03</td><td>Credenciales inválidas</td><td>@smoke</td><td class="ok">PASS</td></tr>
-<tr><td>WEB-04</td><td>Campos vacíos</td><td>@smoke</td><td class="ok">PASS</td></tr>
-<tr><td>WEB-05</td><td>Añadir 1 producto</td><td>@smoke @critical</td><td class="ok">PASS</td></tr>
-<tr><td>WEB-06</td><td>Añadir 3 productos</td><td>@regression</td><td class="ok">PASS</td></tr>
-<tr><td>WEB-07</td><td>Eliminar producto</td><td>@regression</td><td class="ok">PASS</td></tr>
-<tr><td>WEB-08</td><td>Checkout happy path</td><td>@smoke @critical @regression</td><td class="ok">PASS</td></tr>
-<tr><td>WEB-09</td><td>Checkout sin datos</td><td>@smoke</td><td class="ok">PASS</td></tr>
-<tr><td>WEB-10</td><td>Orden por precio</td><td>@regression</td><td class="ok">PASS</td></tr>
-<tr><td>REG-01</td><td>Login → carrito → checkout</td><td>@regression</td><td class="ok">PASS</td></tr>
-</tbody>
-</table>
+  <h2><span class="num">3</span> E2E — detalle</h2>
+  <p class="lead">10 casos automatizados ejecutados en 2 navegadores (20 ejecuciones totales) + 1 caso de regresión de flujo completo.</p>
+
+  <table>
+    <caption>Casos automatizados</caption>
+    <thead>
+      <tr><th>ID</th><th>Caso</th><th>Tags</th><th>Estado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>WEB-01</code></td><td>Login correcto</td><td><span class="tag smoke">@smoke</span><span class="tag critical">@critical</span></td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>WEB-02</code></td><td>Login bloqueado</td><td><span class="tag smoke">@smoke</span></td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>WEB-03</code></td><td>Credenciales inválidas</td><td><span class="tag smoke">@smoke</span></td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>WEB-04</code></td><td>Campos vacíos</td><td><span class="tag smoke">@smoke</span></td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>WEB-05</code></td><td>Añadir 1 producto</td><td><span class="tag smoke">@smoke</span><span class="tag critical">@critical</span></td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>WEB-06</code></td><td>Añadir 3 productos</td><td><span class="tag regression">@regression</span></td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>WEB-07</code></td><td>Eliminar producto</td><td><span class="tag regression">@regression</span></td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>WEB-08</code></td><td>Checkout happy path</td><td><span class="tag smoke">@smoke</span><span class="tag critical">@critical</span><span class="tag regression">@regression</span></td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>WEB-09</code></td><td>Checkout sin datos</td><td><span class="tag smoke">@smoke</span></td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>WEB-10</code></td><td>Orden por precio</td><td><span class="tag regression">@regression</span></td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>REG-01</code></td><td>Login → carrito → checkout</td><td><span class="tag regression">@regression</span></td><td><span class="status ok">PASS</span></td></tr>
+    </tbody>
+  </table>
 </section>
+
+<!-- ============ API ============ -->
 <section id="api">
-<h2>4. API — detalle</h2>
-<table>
-<caption>11 casos con validación de esquema</caption>
-<thead><tr><th>ID</th><th>Caso</th><th>Resultado</th></tr></thead>
-<tbody>
-<tr><td>API-01</td><td>Auth válido (token)</td><td class="ok">PASS</td></tr>
-<tr><td>API-02</td><td>Auth inválido (<code>200 reason=Bad credentials</code>)</td><td class="ok">PASS</td></tr>
-<tr><td>API-03</td><td>Listar reservas</td><td class="ok">PASS</td></tr>
-<tr><td>API-04</td><td>GET reserva</td><td class="ok">PASS</td></tr>
-<tr><td>API-05</td><td>POST reserva</td><td class="ok">PASS</td></tr>
-<tr><td>API-06</td><td>PUT reserva</td><td class="ok">PASS</td></tr>
-<tr><td>API-07</td><td>PATCH reserva</td><td class="ok">PASS</td></tr>
-<tr><td>API-08</td><td>DELETE reserva</td><td class="ok">PASS</td></tr>
-<tr><td>API-09</td><td>PUT sin token → 403</td><td class="ok">PASS</td></tr>
-<tr><td>API-10</td><td>GET inexistente → 404</td><td class="ok">PASS</td></tr>
-<tr><td>API-11</td><td>POST inválido</td><td class="ok">PASS</td></tr>
-</tbody>
-</table>
+  <h2><span class="num">4</span> API — detalle</h2>
+  <p class="lead">11 casos con validación de esquema JSON. Cada test crea su propia reserva y la elimina al finalizar (fixtures idempotentes).</p>
+
+  <table>
+    <caption>CRUD + autenticación + negativos</caption>
+    <thead>
+      <tr><th>ID</th><th>Caso</th><th>Resultado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>API-01</code></td><td>Auth válido (token)</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>API-02</code></td><td>Auth inválido (<code>200 reason=Bad credentials</code>)</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>API-03</code></td><td>Listar reservas</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>API-04</code></td><td>GET reserva</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>API-05</code></td><td>POST reserva</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>API-06</code></td><td>PUT reserva</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>API-07</code></td><td>PATCH reserva</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>API-08</code></td><td>DELETE reserva</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>API-09</code></td><td>PUT sin token → 403</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>API-10</code></td><td>GET inexistente → 404</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><code>API-11</code></td><td>POST inválido</td><td><span class="status ok">PASS</span></td></tr>
+    </tbody>
+  </table>
 </section>
+
+<!-- ============ SEGURIDAD ============ -->
 <section id="seguridad">
-<h2>5. Seguridad OWASP</h2>
-<table>
-<caption>Resultados DAST/SCA</caption>
-<thead><tr><th>Herramienta</th><th>Target</th><th>High</th><th>Medium</th><th>Low</th><th>Estado</th></tr></thead>
-<tbody>
-<tr><td>ZAP Baseline</td><td>www.saucedemo.com</td><td>0</td><td>4</td><td>5 (+11 info)</td><td class="ok">✅ CI run 45998268227</td></tr>
-<tr><td>ZAP API Scan</td><td>restful-booker.herokuapp.com/apidoc</td><td>0</td><td>2</td><td>84 (+7 info)</td><td class="ok">✅ informativo</td></tr>
-<tr><td>SCA npm audit</td><td>npm lockfile</td><td>0</td><td>6 moderate</td><td>0</td><td class="ok">✅ run 45998268227</td></tr>
-<tr><td>Dependency-Check</td><td>npm lockfile</td><td>—</td><td>—</td><td>—</td><td class="warn">SKIP justificado</td></tr>
-</tbody>
-</table>
-<p>Supresiones justificadas en <a href=".zap/rules.tsv"><code>.zap/rules.tsv</code></a> y detalle en <a href="docs/SEGURIDAD.md">docs/SEGURIDAD.md</a>.</p>
+  <h2><span class="num">5</span> Seguridad OWASP</h2>
+  <p class="lead">DAST sobre la web y la API, más SCA sobre las dependencias del proyecto. 0 alertas High en todas las herramientas.</p>
+
+  <table>
+    <caption>Resultados DAST / SCA</caption>
+    <thead>
+      <tr><th>Herramienta</th><th>Target</th><th>High</th><th>Medium</th><th>Low</th><th>Estado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>ZAP Baseline</b></td><td>www.saucedemo.com</td><td>0</td><td>4</td><td>5 (+11 info)</td><td><span class="status ok">CI run 45998268227</span></td></tr>
+      <tr><td><b>ZAP API Scan</b></td><td>restful-booker.herokuapp.com/apidoc</td><td>0</td><td>2</td><td>84 (+7 info)</td><td><span class="status ok">Informativo</span></td></tr>
+      <tr><td><b>SCA npm audit</b></td><td>npm lockfile</td><td>0</td><td>6 moderate</td><td>0</td><td><span class="status ok">Run 45998268227</span></td></tr>
+      <tr><td><b>Dependency-Check</b></td><td>npm lockfile</td><td>—</td><td>—</td><td>—</td><td><span class="status warn">SKIP justificado</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <b>Supresiones justificadas</b> en <a href=".zap/rules.tsv"><code>.zap/rules.tsv</code></a> y detalle completo en <a href="docs/SEGURIDAD.md"><code>docs/SEGURIDAD.md</code></a>. El SKIP de Dependency-Check se debe a la falta de NVD API key en el entorno de CI; se sustituye por <code>npm audit</code> como SCA efectivo.
+  </div>
 </section>
+
+<!-- ============ CARGA ============ -->
 <section id="carga">
-<h2>6. Carga</h2>
-<table>
-<caption>JMeter — 10 hilos, rampa 10 s, 6 loops, 120 muestras</caption>
-<thead><tr><th>Métrica</th><th>Valor</th><th>Umbral</th><th>Estado</th></tr></thead>
-<tbody>
-<tr><td>Error rate</td><td>0,00 %</td><td>&lt; 1 %</td><td class="ok">✅</td></tr>
-<tr><td>p95 global</td><td>769,95 ms</td><td>&lt; 1500 ms</td><td class="ok">✅</td></tr>
-<tr><td>Mediana</td><td>141 ms</td><td>—</td><td>—</td></tr>
-<tr><td>Máximo</td><td>1467 ms</td><td>—</td><td>—</td></tr>
-<tr><td>Throughput</td><td>10,74 req/s</td><td>—</td><td>—</td></tr>
-</tbody>
-</table>
+  <h2><span class="num">6</span> Carga</h2>
+  <p class="lead">JMeter: 10 hilos, rampa 10 s, 6 loops → 120 muestras contra la API pública de Booker.</p>
+
+  <table>
+    <caption>Métricas vs umbral</caption>
+    <thead>
+      <tr><th>Métrica</th><th>Valor</th><th>Umbral</th><th>Estado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Error rate</b></td><td>0,00 %</td><td>&lt; 1 %</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td><b>p95 global</b></td><td>769,95 ms</td><td>&lt; 1500 ms</td><td><span class="status ok">PASS</span></td></tr>
+      <tr><td>Mediana</td><td>141 ms</td><td>—</td><td>—</td></tr>
+      <tr><td>Máximo</td><td>1467 ms</td><td>—</td><td>—</td></tr>
+      <tr><td>Throughput</td><td>10,74 req/s</td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout ok">
+    <b>Baseline medido:</b> el umbral de p95 se fijó como baseline × 1.5 a partir de la primera corrida estable. Documentado en <code>load/BASELINE.md</code>.
+  </div>
 </section>
+
+<!-- ============ MANUAL ============ -->
 <section id="manual">
-<h2>7. QA manual</h2>
-<p>24 casos núcleo (10 WEB + 11 API + 1 CARGA + 2 SEGURIDAD) más SEC-03 como checklist complementario. <code>npm run manual:lint</code> valida secciones obligatorias e IDs sin huérfanos. La <a href="docs/manual/MATRIZ_MANUAL_AUTO.md">matriz</a> cruza 21 casos funcionales con sus tests automatizados.</p>
+  <h2><span class="num">7</span> QA manual</h2>
+  <p class="lead">Arquitectura reproducible por un QA humano sin leer código.</p>
+
+  <div class="cards">
+    <div class="card">
+      <span class="lbl">Casos núcleo</span>
+      <span class="val">24</span>
+      <span class="note">10 WEB + 11 API + 1 CARGA + 2 SEGURIDAD</span>
+    </div>
+    <div class="card">
+      <span class="lbl">Casos extra</span>
+      <span class="val">1</span>
+      <span class="note">SEC-03 como checklist complementario</span>
+    </div>
+    <div class="card">
+      <span class="lbl">Plantillas</span>
+      <span class="val">4</span>
+      <span class="note">caso · bug · evidencia · exploratoria</span>
+    </div>
+    <div class="card">
+      <span class="lbl">Matriz cruzada</span>
+      <span class="val">21</span>
+      <span class="note">casos funcionales ↔ tests automatizados</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <code>npm run manual:lint</code> valida secciones obligatorias e IDs sin huérfanos. Matriz completa en <a href="docs/manual/MATRIZ_MANUAL_AUTO.md"><code>docs/manual/MATRIZ_MANUAL_AUTO.md</code></a>.
+  </div>
 </section>
+
+<!-- ============ CRITERIOS ============ -->
 <section id="criterios">
-<h2>8. Criterios de aceptación</h2>
-<ul>
-<li class="ok">✅ Smoke 100 % (8/8).</li>
-<li class="ok">✅ Regresión 8/8.</li>
-<li class="ok">✅ API 11/11.</li>
-<li class="ok">✅ Carga error &lt; 1 % y p95 &lt; 1500 ms.</li>
-<li class="ok">✅ Seguridad 0 High en ZAP.</li>
-<li class="ok">✅ SCA npm audit: 0 High / 0 Critical; Dependency-Check SKIP justificado.</li>
-<li class="ok">✅ 0 flaky en 3 corridas consecutivas.</li>
-<li class="ok">✅ <code>manual:lint</code> verde.</li>
-</ul>
+  <h2><span class="num">8</span> Criterios de aceptación</h2>
+  <p class="lead">Evaluación objetiva del DoD. Todos los criterios se cumplen.</p>
+
+  <ul class="checklist">
+    <li>Smoke 100 % (8/8)</li>
+    <li>Regresión 8/8</li>
+    <li>API 11/11</li>
+    <li>Carga error &lt; 1 % y p95 &lt; 1500 ms</li>
+    <li>Seguridad 0 High en ZAP</li>
+    <li>SCA: 0 High / 0 Critical (Dependency-Check SKIP justificado)</li>
+    <li>0 flaky en 3 corridas consecutivas</li>
+    <li><code>manual:lint</code> verde</li>
+  </ul>
 </section>
+
+<!-- ============ REPO Y CI ============ -->
+<section id="repo">
+  <h2><span class="num">9</span> Repositorio, CI y trazabilidad</h2>
+  <p class="lead">Dirección exacta del repositorio, estado del código y ejecuciones de CI verificables.</p>
+
+  <div class="callout ok">
+    <b>Repositorio público:</b>
+    <a href="https://github.com/Gbrito1985Odoo/qa-automation-test">https://github.com/Gbrito1985Odoo/qa-automation-test</a><br>
+    <b>Clone:</b> <code>git clone https://github.com/Gbrito1985Odoo/qa-automation-test.git</code><br>
+    <b>Rama:</b> <code>main</code> · <b>Node:</b> 20 LTS (<code>.nvmrc</code>) · <b>Commits:</b> 19 · <b>Archivos versionados:</b> 90
+  </div>
+
+  <table>
+    <caption>Evolución y CI</caption>
+    <thead>
+      <tr><th>Ítem</th><th>Valor</th><th>Evidencia</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Evolución verificada</td><td>18 entradas · 15 PASS · 3 FAIL corregidos</td><td><a href="reports/evolucion.log"><code>reports/evolucion.log</code></a></td></tr>
+      <tr><td>Playwright CI (final)</td><td>run <code>45999479447</code> · success · HEAD <code>61ba4f9</code></td><td><a href=".github/workflows/playwright.yml"><code>playwright.yml</code></a></td></tr>
+      <tr><td>Security CI (final)</td><td>run <code>45999479412</code> · success · ZAP 0 High + SCA 0 High/Critical</td><td><a href=".github/workflows/security.yml"><code>security.yml</code></a></td></tr>
+      <tr><td>JMeter CI</td><td>run <code>45987216383</code> · success</td><td><a href=".github/workflows/jmeter.yml"><code>jmeter.yml</code></a></td></tr>
+      <tr><td>Informe automático</td><td>criterios PASS · texto dinámico escapado</td><td><a href="reports/informe-final.html"><code>reports/informe-final.html</code></a></td></tr>
+      <tr><td>Documentación</td><td>README 9 secciones + 3 matrices + arquitectura manual</td><td><a href="README.md"><code>README.md</code></a> · <a href="docs/SEGURIDAD.md"><code>docs/SEGURIDAD.md</code></a> · <a href="docs/manual/MATRIZ_MANUAL_AUTO.md"><code>docs/manual/MATRIZ_MANUAL_AUTO.md</code></a></td></tr>
+      <tr><td>Pendiente humano</td><td>6 dependencias Moderate; NVD_API_KEY para reactivar Dependency-Check; vigilar DOM/API; capturas manuales</td><td><code>docs/SEGURIDAD.md</code> · <code>docs/manual/EVIDENCIAS/README.md</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
 </main>
-<footer>Resultados construidos con Playwright JSON, JMeter statistics.json, ZAP y SCA descargados de CI. Generado desde artefactos reales.</footer>
+
+<footer>
+  <div class="badge">Informe generado desde artefactos reales</div>
+  <div>Resultados construidos con Playwright JSON, JMeter <code>statistics.json</code>, ZAP y SCA descargados de CI · QA Automation · 2026</div>
+</footer>
+
 </body>
 </html>
