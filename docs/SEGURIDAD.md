@@ -15,7 +15,7 @@ Fuera de alcance: explotación activa, pruebas sobre servicios de producción y 
 |---|---|---|
 | OWASP ZAP Baseline | `zaproxy/action-baseline@v0.15.0` | `-a -j`, `fail_action: true`, reglas `.zap/rules.tsv` |
 | OWASP ZAP API Scan | `zaproxy/action-api-scan@v0.9.0` | formato `openapi`, informativo (`continue-on-error`) |
-| OWASP Dependency-Check | latest desde `current.txt` | HTML + `--failOnCVSS 7` |
+| OWASP Dependency-Check | release latest de `dependency-check/DependencyCheck` | HTML + `--failOnCVSS 7` |
 
 ## Baseline de hallazgos
 
@@ -31,8 +31,9 @@ Fuera de alcance: explotación activa, pruebas sobre servicios de producción y 
 2. **API5 — Broken Function Level Auth:** `PUT /booking/{id}` sin token devuelve `403` (API-09); control correcto.
 3. **API1 — BOLA:** `GET /booking/{id}` no exige token; el servicio es público de demostración. Limitación del objetivo, no del suite: no se pueden probar permisos por usuario. Cubierto por API-10 (inexistente → 404).
 4. **API8 — Misconfiguration:** cabeceras `Content-Type: application/json` presentes; `X-Powered-By: Express` divulgado por Booker. Documentado como Low/Informational.
-5. **Web:** cabeceras `X-Content-Type-Options` y `X-Frame-Options` ausentes en SauceDemo; supresiones justificadas en `.zap/rules.tsv` por tratarse de un sitio demo público.
-6. **SCA:** CVEs con CVSS ≥ 7 hacen fallar el job; cualquier excepción debe documentarse aquí con fecha y motivo.
+5. **Web:** SauceDemo no define HSTS, CSP, `X-Content-Type-Options`, `X-Frame-Options`, Permissions Policy ni COEP; además expone comentarios de bundle, Base64 y cabeceras `Sec-Fetch` ausentes. Todas son alertas WARN (High = 0) propias de una SPA demo pública y están suprimidas de forma explícita en `.zap/rules.tsv`.
+6. **API:** Booker añade WARN de `X-Powered-By`, HSTS/CSP ausentes, timestamp Unix y contenido HTTP; tampoco hay FAIL-NEW. Se conservan como información, sin supresión ciega salvo reglas ya justificadas.
+7. **SCA:** CVEs con CVSS ≥ 7 hacen fallar el job; cualquier excepción debe documentarse aquí con fecha y motivo.
 
 ## Supresiones
 
